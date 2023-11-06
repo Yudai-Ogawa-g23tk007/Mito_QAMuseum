@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+                   {% block ul %}
+                   <ul class="navbar-nav"><li class="nav-item"><a href="{% url 'Name_En' %}" class="nav-link">English</a></li></ul>
+                    {% endblock %}
+                </div>
+            </nav>
+        </header>
+        {% block body %}
+        <main>
+            <br>
+        <div class="text-center">
+        <form method="POST">{% csrf_token %}
+            {{form.as_p}}
+            
+        </div>
+
+            <div class="text-center">
+            <button type="submit" class="btn btn-success btn-block">次へ</button></div>
+        </form>
+        </main>
+    
+    {% endblock %}

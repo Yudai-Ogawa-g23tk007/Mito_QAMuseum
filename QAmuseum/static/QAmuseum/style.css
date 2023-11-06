@@ -1,0 +1,124 @@
+.omura{
+   position:absolute;
+   left: 300px;
+   top:240px;
+}
+.path{
+    position:relative;
+}
+.center{
+    width:500px;
+    margin: 0 auto;
+}
+.bg-indigo{
+    background-color: #49274a;
+}
+header{
+    position:fixed;
+    top:0;
+    width:100%;
+    height:100px;
+    font-size: larger;
+}
+main{
+    margin-top: 150px;
+    width:100%;
+}
+body{
+    font-size: 300%;
+    background-color: #f8eee7;
+}
+button{
+    width:4em;
+    height:2em;
+    
+}
+
+.navbar-brand{
+    font-size: 100%;
+}
+
+.container{
+    font-size: 125%;
+}
+.bg{
+    font-size: 150%;
+}
+
+.btn-success{
+    margin-top:1em;
+    width:600px;
+    font-size: 100%;
+    background-color: #94618e;
+    border-color: #94618e;
+}
+.btn-success:hover {
+    background-color: #7b4b6d;
+    border-color: #7b4b6d;
+  }
+/* 右向きの矢印を追加 */
+.btn-arrow:after {
+    content: '\2192'; /* Unicodeで右向きの矢印を指定 */
+    margin-left: 10px; /* 矢印の左側の余白 */
+}
+
+/* ボタンに矢印スタイルを適用 */
+.btn-arrow {
+    position: relative;
+}
+
+/* 矢印のスタイルを調整する場合は、このクラスをカスタマイズ */
+.btn-arrow.custom-arrow:after {
+    color:  white; /* 矢印の色を変更 */
+    font-size: 24px; /* 矢印のサイズを変更 */
+}
+.large-textbox {
+    width: 400px; /* テキストボックスの幅を設定 */
+    height: 200px; /* テキストボックスの高さを設定 */
+    font-size: 64px; /* テキストのフォントサイズを設定 */
+    text-align: center;
+}
+.form-center{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+.form-param {
+    width:600px;
+    height:100px;
+    font-size: 48px;
+    text-align: center;
+}
+.form-paramEn{
+    width:600px;
+    height:100px;
+    font-size: 48px;
+}
+.form-label {
+    font-size: 48px;
+}
+.btn-add {
+    width:400px;
+    height: 50px;
+    background-color: white;
+    border-color: black;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    margin-top:1em;
+    margin-left: auto;
+    margin-right: auto;
+    font-size: 32px;
+}
+.check {
+    width: 50px;
+    height: 50px;
+    margin-left: 50px;
+}
+
+.check-text{
+    font-size: 48px;
+}

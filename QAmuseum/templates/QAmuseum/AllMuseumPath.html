@@ -1,0 +1,108 @@
+{% load static %}
+{% load django_bootstrap5 %}
+{% load widget_tweaks %}
+<!DOCTYPE html>
+<html>
+    <head>
+        <link rel="stylesheet" href="{% static 'QAmuseum/style.css' %}">
+        {% bootstrap_css %}
+        {% bootstrap_javascript %}
+        <style>
+            
+            p{font-size: 300%;}
+            header{
+                position:fixed;
+                top:0;
+                width:100%;
+                height:100px;
+                font-size: larger;
+                z-index: 999;
+            }
+            main{
+                margin-top: 150px;
+                width:100%;
+            }
+            body{
+                font-size: 300%;
+            }
+            button{
+                width:8em;
+                height:3em;
+                margin-bottom: 1em;
+                
+            }
+            #id_time ,#id_speed,#id_browse{
+                width: 250px;
+            }
+            .navbar-brand{
+                font-size: 100%;
+            }
+            .btn-success{
+                
+                font-size: 60%;
+                
+            }
+            .btn-danger{
+                margin-right: 30px;
+                font-size: 60%;
+                
+            }
+            .container{
+                font-size: 125%;
+            }
+            .bg{
+                font-size: 130%;
+            }
+            img{
+                width:100%;
+                height:auto;
+            }
+            .omura{
+                width:900px;height: 700px;
+                top:14em;
+                left:10%
+            }
+            .pl{
+                width:100%;
+                height:auto;
+                left:-180px;
+                top:-180px
+            }
+            .pll{
+                width:140%;height:auto;
+                
+            }
+        </style>
+        <title>経路表示</title>
+    </head>
+    <body>
+        <header>
+            <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
+                <div class="container-fluid">
+                    <a class="navbar-brand" href="#">大村記念学術館経路最適化</a>
+                </div>
+            </nav>
+        </header>
+        <div class="container">
+        <main>
+        <div style="position:relative;z-index: 990;">
+        <div class="text-center">
+        この経路で案内を<br>
+        始めますか<br>
+    予測巡回時間 およそ{{goaltime}}分</div>
+        <div class="mx-auto btn-group">
+        <a href="{% url 'CalculatePath' pk  %}"class="btn btn-danger btn-block" role="button" style="width:10em;
+                height:5em;margin-top:1em;"><p class='bg'>計算画面へ戻る</p></a>
+        <a href="{% url 'MuseumPath' pk  %}"class="btn btn-success btn-block" role="button" style="width:10em;
+        height:5em;margin-top:1em;"><p class='bg'>案内を開始</p></a>
+        </div>
+        </div>
+        <div class="omura">
+        <div style="position:absolute;" ><img src="/media/omura.png" ></div>
+        <div style="position:relative;" class="pl"><img src="data:image/png;base64,{{graph|safe}}" class="pll"></div>
+        </div>
+        </main>
+        </div>
+
+    </body>
+</html>
