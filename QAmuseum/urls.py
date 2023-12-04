@@ -19,4 +19,7 @@ urlpatterns=[
     path("Evaluation/<int:pk>",views.Evaluation,name="Evaluation"),
     path("NextPath/<int:pk>",views.NextPath,name="NextPath"),
     path("End",views.End,name="End"),
+    path("login",views.Login,name="login"),
+    path("login_en",views.Login_En,name="login_en"),
+    path("Agree",views.Agree,name="Agree"),
 ]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

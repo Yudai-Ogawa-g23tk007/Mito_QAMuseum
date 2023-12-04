@@ -13,6 +13,8 @@ class OmuraMuseum(models.Model):
     wait_time = models.IntegerField(default=0)
     exp = models.TextField()
     image=models.ImageField(upload_to='media/',blank=True)
+    en_name=models.CharField(max_length=100,default="title")
+    en_exp = models.TextField(default="text")
     #sum_score=models.IntegerField(default=0)
 
 
@@ -60,6 +62,8 @@ class UserPath(models.Model):
     caluculate_back=models.CharField(default=0,max_length=100)
     calc_bool=models.BooleanField(default=False)
     count_time=models.FloatField(default=0)
+    last_page=models.URLField(blank=True,default="")
+    password = models.CharField(default="",max_length=10)
     def __str__(self):
         return self.name
 

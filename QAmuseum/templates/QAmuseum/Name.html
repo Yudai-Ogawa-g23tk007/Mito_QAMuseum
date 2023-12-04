@@ -2,21 +2,25 @@
                    {% block ul %}
                    <ul class="navbar-nav"><li class="nav-item"><a href="{% url 'Name_En' %}" class="nav-link">English</a></li></ul>
                     {% endblock %}
-                </div>
-            </nav>
-        </header>
+                
         {% block body %}
         <main>
-            <br>
         <div class="text-center">
+            大村智記念学術館<br>
+            おすすめルートシステム</div>
+        <div class="text-center">
+            <br>
         <form method="POST">{% csrf_token %}
             {{form.as_p}}
             
         </div>
 
             <div class="text-center">
-            <button type="submit" class="btn btn-success btn-block">次へ</button></div>
+            <button type="submit" class="btn btn-success btn-block">始める</button>
         </form>
+        <br><br>
+        <a href = "{% url 'login' %}">再ログイン</a></div>
+        <a href = "{% url 'Agree' %}">同意書</a>
         </main>
     
     {% endblock %}

@@ -1,3 +1,4 @@
+
 .omura{
    position:absolute;
    left: 300px;
@@ -13,6 +14,7 @@
 .bg-indigo{
     background-color: #49274a;
 }
+
 header{
     position:fixed;
     top:0;
@@ -31,7 +33,6 @@ body{
 button{
     width:4em;
     height:2em;
-    
 }
 
 .navbar-brand{
@@ -52,18 +53,19 @@ button{
     background-color: #94618e;
     border-color: #94618e;
 }
-.btn-success:hover {
+
+.btn-success:hover{
     background-color: #7b4b6d;
     border-color: #7b4b6d;
   }
 /* 右向きの矢印を追加 */
-.btn-arrow:after {
+.btn-arrow:after{
     content: '\2192'; /* Unicodeで右向きの矢印を指定 */
     margin-left: 10px; /* 矢印の左側の余白 */
 }
 
 /* ボタンに矢印スタイルを適用 */
-.btn-arrow {
+.btn-arrow{
     position: relative;
 }
 
@@ -84,20 +86,24 @@ button{
     align-items: center;
     justify-content: center;
 }
+
 .form-param {
     width:600px;
     height:100px;
     font-size: 48px;
     text-align: center;
 }
-.form-paramEn{
+
+.form-paramEn {
     width:600px;
     height:100px;
     font-size: 48px;
 }
+
 .form-label {
     font-size: 48px;
 }
+
 .btn-add {
     width:400px;
     height: 50px;
@@ -113,12 +119,24 @@ button{
     margin-right: auto;
     font-size: 32px;
 }
+
 .check {
     width: 50px;
     height: 50px;
     margin-left: 50px;
 }
 
-.check-text{
+.check-text {
     font-size: 48px;
+}
+.red{
+    color:red;
+}
+.agree-title{
+    margin: 0 auto;
+    text-align: center;
+}
+
+.agree{
+    font-size: 60%;
 }

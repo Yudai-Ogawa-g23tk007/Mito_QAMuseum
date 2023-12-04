@@ -7,74 +7,8 @@
         {% bootstrap_css %}
         {% bootstrap_javascript %}
         <link rel="stylesheet" href="{% static 'QAmuseum/style.css' %}">
+        <link rel="stylesheet" type="text/css" href="{% static 'QAmuseum/style.css' %}">
         
-        
-        <style>
-            
-            p{font-size: 300%;}
-            header{
-                position:fixed;
-                top:0;
-                width:100%;
-                height:100px;
-                font-size: larger;
-                z-index: 999;
-            }
-            main{
-                margin-top: 150px;
-                width:100%;
-            }
-            body{
-                font-size: 300%;
-            }
-            button{
-                width:10em;
-                height:5em;
-                margin-bottom: 1em;
-                
-            }
-            #id_time ,#id_speed,#id_browse{
-                width: 250px;
-            }
-            .navbar-brand{
-                font-size: 100%;
-            }
-            .btn-success{
-                margin-top:2em;
-                font-size: 60%;
-                margin-bottom:1em;
-            }
-            .btn-danger{
-                margin-top:2em;
-                margin-right: 30px;
-                font-size: 60%;
-            }
-            .container{
-                font-size: 125%;
-            }
-            .bg{
-                font-size: 150%;
-            }
-            img{
-                width:100%;
-                height:auto;
-            }
-            .omura{
-                width:900px;height: 700px;
-                top:14em;
-                left:10%
-            }
-            .pl{
-                width:100%;
-                height:auto;
-                left:-180px;
-                top:-180px
-            }
-            .pll{
-                width:140%;height:auto;
-                
-            }
-        </style>
         <title>経路表示</title>
     </head>
     <body>
@@ -100,7 +34,7 @@
         </form></div>
         </div>
         <div class="omura">
-        <div style="position:absolute;" ><img src="/media/omura.png" ></div>
+        <div style="position:absolute;" ><img src="/media/map_all.png" ></div>
         <div style="position:relative;" class="pl"><img src="data:image/png;base64,{{graph|safe}}" class="pll"></div>
         </div>
         </main>

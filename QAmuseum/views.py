@@ -7,7 +7,7 @@ from .models import UserPath,OmuraMuseum,MuseumEvaluation
 from .omuracalculate import calculatepath,time_for_move_calc,time_stay,recalculate,data
 from QAmuseum.views_modules import module
 from django.views.generic import ListView,CreateView
-from .forms import parameterform,NameForm,EvaluationForm,parameterEnform
+from .forms import parameterform,NameForm,EvaluationForm,parameterEnform,LoginForm
 import matplotlib.pyplot as plt
 from io import BytesIO
 import base64
@@ -17,6 +17,7 @@ import time
 from celery import shared_task
 from celery.result import AsyncResult
 from django_celery_results.models import TaskResult
+from django import forms
 # Create your views here.
 
 #スタート画面
@@ -28,15 +29,20 @@ class Name(CreateView):
     template_name="QAmuseum/Name.html"
     #form_class=NameForm
     model=UserPath
-    fields=['name']
+    fields=['name','password']
     def get_form(self,form_class=None):
         form = super().get_form(form_class)
         form.fields['name'].widget.attrs['placeholder'] = '名前を入力'
         form.fields['name'].widget.attrs['class']='large-textbox'
         form.fields['name'].label =''
+        form.fields['password'].widget= forms.PasswordInput()
+        form.fields['password'].widget.attrs['placeholder'] = 'パスワード'
+        form.fields['password'].widget.attrs['class']='large-textbox'
+        form.fields['password'].label=''
         return form
     def get_success_url(self):
         username=self.request.POST.get('name')
+        password = self.request.POST.get('password')
         pk=self.object.pk
         #print(type(username) is str)
         print(pk)
@@ -45,25 +51,62 @@ class Name_En(CreateView):
     template_name="QAmuseum/Name_En.html"
     #form_class=NameForm
     model=UserPath
-    fields=['name']
+    fields=['name','password']
     def get_form(self,form_class=None):
         form = super().get_form(form_class)
         form.fields['name'].widget.attrs['placeholder'] = 'Name'
         form.fields['name'].widget.attrs['class']='large-textbox'
         form.fields['name'].label =''
+        form.fields['password'].widget= forms.PasswordInput()
+        form.fields['password'].widget.attrs['placeholder'] = 'Password'
+        form.fields['password'].widget.attrs['class']='large-textbox'
+        form.fields['password'].label=''
         return form
     def get_success_url(self):
         username=self.request.POST.get('name')
+        password = self.request.POST.get('password')
         pk=self.object.pk
         #print(type(username) is str)
         print(pk)
         return reverse("Parameter",kwargs={'pk':pk})
 
+def Agree(request):
+    
+    return render(request,"QAmuseum/Agree.html")
+
+def Login(request):
+    form = LoginForm()
+    ctx = {"form"}
+    if request.POST:
+        form = LoginForm(request.POST)
+        if form.is_valid():
+            login_name=form.cleaned_data["name"]
+            login_password=form.cleaned_data["password"]
+            user = UserPath.objects.get(name=login_name,password=login_password)
+            pk=user.pk
+            url=user.last_page
+            return HttpResponseRedirect(url)
+    return render(request,"QAmuseum/login.html",{'form':form})
+
+def Login_En(request):
+    form = LoginForm()
+    ctx = {"form"}
+    if request.POST:
+        form = LoginForm(request.POST)
+        if form.is_valid():
+            login_name=form.cleaned_data["name"]
+            login_password=form.cleaned_data["password"]
+            user = UserPath.objects.get(name=login_name,password=login_password)
+            pk=user.pk
+            url=user.last_page
+            return HttpResponseRedirect(url)
+    return render(request,"QAmuseum/login_en.html",{'form':form})
 #パラメータ設定画面
 def Parameter(request,pk):
     print(type(pk) is str)
     obj=UserPath.objects.get(pk=pk)
-    
+    obj.last_page=request.build_absolute_uri()
+    obj.save()
     initial_values={"time":obj.time,"speed":obj.speed,"browse":obj.browse,"demand":'0'}
     form = parameterform(initial_values)
     ctx={"form":form,'pk':pk}
@@ -96,7 +139,8 @@ def Parameter(request,pk):
 def Parameter_En(request,pk):
     print(type(pk) is str)
     obj=UserPath.objects.get(pk=pk)
-    
+    obj.last_page=request.build_absolute_uri()
+    obj.save()
     initial_values={"time":obj.time,"speed":obj.speed,"browse":obj.browse,"demand":'0'}
     form = parameterEnform(initial_values)
     ctx={"form":form,'pk':pk}
@@ -150,6 +194,8 @@ def CalculatePath(request,pk):
         }
         """
     object=UserPath.objects.get(pk=pk)
+    object.last_page=request.build_absolute_uri()
+    object.save()
     #return render(request,"QAmuseum/CalculatePath.html",dict(user_path=obj))
     return render(request,"QAmuseum/CalculatePath.html",{'object':object,'pk':pk})
 #計算実行
@@ -181,6 +227,9 @@ def caluculate(request,pk):
 
 
 def AllMuseum(request,pk):
+    obj=UserPath.objects.get(pk=pk)
+    obj.last_page=request.build_absolute_uri()
+    obj.save()
     userpath = UserPath.objects.filter(pk=pk)
     for userpath in userpath:
         object = {
