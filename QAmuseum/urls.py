@@ -22,4 +22,9 @@ urlpatterns=[
     path("login",views.Login,name="login"),
     path("login_en",views.Login_En,name="login_en"),
     path("Agree",views.Agree,name="Agree"),
+    path("ParameterSelect/<int:pk>/",views.ParameterSelect,name="ParameterSelect"),
+    path("TSPCalc/<int:pk>",views.TSPCalc,name="TSPCalc"),
+    path("TSPPathShow/<int:pk>",views.TSPPathShow,name="TSPPathShow"),
+    path("TSPSpot/<int:pk>",views.TSPSpot,name="TSPSpot"),
+
 ]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

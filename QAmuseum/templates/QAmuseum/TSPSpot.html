@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+    {% block ul %}
+    {% endblock %}
+    {% block body %}
+    <main>
+        <div class="container">
+        現在地点:{{name}}<br>
+        説明:{{explain}}<br>
+        <img src="/media/{{img}}" width="300px"><br>
+        </div>
+    </main>
+    {% endblock %}

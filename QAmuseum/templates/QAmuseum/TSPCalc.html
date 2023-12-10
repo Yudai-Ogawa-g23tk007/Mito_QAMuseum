@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+    {% block ul %}
+    {% endblock %}
+    {% block body %}
+    <div class = "container">
+    <img src="/media/qamv.gif" width="500px">
+    <p>計算中</p></div>
+    <script>
+        setTimeout(
+        function() {
+            window.location.href = "{% url 'TSPPathShow' pk %}";
+        },2000);
+    </script>
+    {% endblock %}

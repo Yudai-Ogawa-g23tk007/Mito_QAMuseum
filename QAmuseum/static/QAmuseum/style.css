@@ -1,8 +1,9 @@
 
 .omura{
-   position:absolute;
-   left: 300px;
+   position:relative;
+   margin-left: auto;
    top:240px;
+   
 }
 .path{
     position:relative;
@@ -23,7 +24,7 @@ header{
     font-size: larger;
 }
 main{
-    margin-top: 150px;
+    margin-top: auto;
     width:100%;
 }
 body{
@@ -139,4 +140,39 @@ button{
 
 .agree{
     font-size: 60%;
+}
+
+.name-title{
+    font-size: 64px;
+}
+.end-text{
+    font-size: 48px;
+}
+
+input[type="radio"] {
+    width: 48px;
+    height: 48px;
+}
+
+.image-container{
+    position: relative;
+}
+
+.image-container img {
+    width:100%;
+    height:auto;
+    position: absolute;
+    margin-bottom: 1em;
+}
+
+.image-container img:first-child {
+    z-index: -1; /* image1を手前に表示 */
+}
+.image-container img:last-child {
+    transform: scale(1.5); /* 2番目の画像を1.5倍に拡大 */
+    z-index: 2; /* 2番目の画像を手前に表示 */
+}
+.image-text{
+    position: absolute;
+    margin-top: 800px;
 }

@@ -127,4 +127,5 @@ class LoginForm(forms.Form):
         self.label_suffix = " "
         """
     name = forms.CharField(label='name',max_length=20)
-    password = forms.CharField(label='password',widget=forms.PasswordInput(),max_length=10)
+    password = forms.CharField(label='password',widget=forms.PasswordInput(),max_length=8)
+

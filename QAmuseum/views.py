@@ -4,7 +4,7 @@ from django.shortcuts import render, reverse,redirect
 from django.http import HttpResponse,HttpResponseRedirect
 from django.contrib.auth.models import User
 from .models import UserPath,OmuraMuseum,MuseumEvaluation
-from .omuracalculate import calculatepath,time_for_move_calc,time_stay,recalculate,data
+from .omuracalculate import calculatepath,time_for_move_calc,time_stay,recalculate,data,TSPCalc
 from QAmuseum.views_modules import module
 from django.views.generic import ListView,CreateView
 from .forms import parameterform,NameForm,EvaluationForm,parameterEnform,LoginForm
@@ -18,6 +18,7 @@ from celery import shared_task
 from celery.result import AsyncResult
 from django_celery_results.models import TaskResult
 from django import forms
+from django.urls import reverse
 # Create your views here.
 
 #スタート画面
@@ -46,7 +47,7 @@ class Name(CreateView):
         pk=self.object.pk
         #print(type(username) is str)
         print(pk)
-        return reverse("Parameter",kwargs={'pk':pk})
+        return reverse("ParameterSelect",kwargs={'pk':pk})
 class Name_En(CreateView):
     template_name="QAmuseum/Name_En.html"
     #form_class=NameForm
@@ -71,7 +72,7 @@ class Name_En(CreateView):
         return reverse("Parameter",kwargs={'pk':pk})
 
 def Agree(request):
-    
+
     return render(request,"QAmuseum/Agree.html")
 
 def Login(request):
@@ -90,7 +91,7 @@ def Login(request):
 
 def Login_En(request):
     form = LoginForm()
-    ctx = {"form"}
+    
     if request.POST:
         form = LoginForm(request.POST)
         if form.is_valid():
@@ -101,6 +102,83 @@ def Login_En(request):
             url=user.last_page
             return HttpResponseRedirect(url)
     return render(request,"QAmuseum/login_en.html",{'form':form})
+
+def ParameterSelect(request,pk):
+    obj=UserPath.objects.get(pk=pk)
+    obj.last_page=request.build_absolute_uri()
+    obj.save()
+    if request.method == 'POST':
+        select_option=request.POST.get('radio_option')
+        if select_option == 'option1':
+            return HttpResponseRedirect(reverse('TSPCalc',args=[pk]))
+        if select_option == 'option2':
+            return HttpResponseRedirect(reverse('Parameter',args=[pk]))
+    return render(request,"QAmuseum/ParamSelect.html",{'pk':pk})
+
+def PatameterSelectEn(request,pk):
+    obj=UserPath.objects.get(pk=pk)
+    obj.last_page=request.build_absolute_uri()
+    obj.save()
+    if request.method == 'POST':
+        select_option = request.POST.get('radio_opt')
+        if select_option == 'option1':
+            return HttpResponseRedirect()
+        if select_option == 'option2':
+            return HttpResponseRedirect()
+    return render(request,"QAmuseum/ParamSelect_En.html",{'pk':pk})
+
+def TSPCalc(request,pk):
+    
+    #path = allview_calc()
+    task = test_calc.delay()
+    obj  = UserPath.objects.get(pk=pk)
+    obj.caluculate_back = task
+    obj.save()
+    return redirect('TSPPathShow',pk)
+    
+
+    
+def TSPPathShow(request,pk):
+    obj=UserPath.objects.get(pk=pk)
+    obj.last_page=request.build_absolute_uri()
+    obj.save()
+    task = AsyncResult(obj.caluculate_back)
+    if task.ready():
+        path = task.get()
+        obj.path=path
+        pt = path.split(',')
+        obj.now_spot=int(pt[0])
+        obj.next_spot=int(pt[1])
+        obj.save()
+        
+        graph = All_Plot_graph(pt)
+        ctx={'pk':pk,'path':path,"graph":graph}
+        return render(request,"QAmuseum/TSPPathShow.html",ctx)
+    return render(request,"QAmuseum/TSPCalc.html",{'pk':pk})
+
+def TSPNextPath(request,pk):
+    obj=UserPath.objects.get(pk=pk)
+    obj.last_page=request.build_absolute_uri()
+    obj.save()
+    return render(request,"QAmuseum/TSPNextPath.html",{'pk':pk})
+    
+def TSPSpot(request,pk):
+    obj=UserPath.objects.get(pk=pk)
+    obj.last_page=request.build_absolute_uri()
+    obj.save()
+    nsp = obj.now_spot
+    spot = OmuraMuseum.objects.get(id=nsp+1)
+    object_spot={'name':spot.name,'explain':spot.exp,
+                "img":spot.image,
+                "pk":obj.pk}
+    """
+    value={"display_evaluation":0}
+    form={"form":EvaluationForm(value)}
+    object_spot.update(form)"""
+    return render(request,"QAmuseum/TSPSpot.html",object_spot)
+
+
+
 #パラメータ設定画面
 def Parameter(request,pk):
     print(type(pk) is str)
@@ -315,6 +393,21 @@ def Evaluation(request,pk):
         form=EvaluationForm()
     return redirect("MuseumPath",pk)
 
+def EvaluationTSP(request,pk):
+    if request.method=="POST":
+        form = EvaluationForm(request.POST)
+        if form.is_valid():
+            ev=form.cleaned_data["display_evaluation"]
+            if int(ev)==0:
+                print(ev)
+                return redirect("TSPSpot",pk)
+            else:
+                userpath=UserPath.objects.get(pk=pk)
+                spot=OmuraMuseum.objects.get(id=userpath.now_spot+1)
+                evaluation=MuseumEvaluation.objects.create(display_id=userpath.now_spot,display_name=spot.name,display_evaluation=ev,user_name=userpath.name,display_time=time.time()-userpath.now_time)
+    else:
+        form=EvaluationForm()
+    return redirect("TSPNextPath",pk)
 
 def Arrive(request,pk):
     if request.method == 'GET':
@@ -516,6 +609,7 @@ def All_Plot_graph(path):
     plt.gca().spines['bottom'].set_visible(False)
     plt.gca().spines['left'].set_visible(False)
     plt.tick_params(labelbottom=False, labelleft=False, labelright=False, labeltop=False, bottom=False, left=False, right=False, top=False)
+    plt.subplots_adjust(left=0, right=1, top=1, bottom=0)
     graph = Output_graph()
     return graph
 
@@ -662,7 +756,6 @@ def Waypoint(now_spot,next_spot):
                 if next_spot==7 or next_spot==8:
                     waypoint.append(28)
         if next_spot >=16:
-            waypoint.append(29)
             if next_spot>=18:
                 waypoint.append(26)
         if next_spot==13:
@@ -675,8 +768,7 @@ def Waypoint(now_spot,next_spot):
             waypoint.append(21)
         if next_spot==13:
             waypoint.append(24)
-        if next_spot==15:
-            waypoint.append(29)
+        
 
     if now_spot==18:
         if next_spot<=10:
@@ -686,9 +778,7 @@ def Waypoint(now_spot,next_spot):
             if next_spot==13:
                 waypoint.append(25)
                 waypoint.append(24)
-            if next_spot==15:
-                waypoint.append(29)
-
+            
     if now_spot==19:
         if next_spot==6:
             waypoint(20)
@@ -702,7 +792,7 @@ def Waypoint(now_spot,next_spot):
             waypoint.append(26)
         if next_spot==15:
             waypoint.append(26)
-            waypoint.append(29)
+            
 
     waypoint.append(next_spot)
     return waypoint
@@ -712,24 +802,37 @@ def graph_data():
        480,#2
        440,#3
        320,#4
-       230,#5
-       230,#6
-       210,#7
+       215,#5
+       200,#6
+       200,#7
        370,#8
-       330,#9
+       340,#9
        290,#10
-       240,#11
-       300,#12
+       210,#11
+       310,#12
        320,#13
-       430,#14
-       520,#15
-       560,#16
-       650,#17
+       450,#14
+       560,#15
+       490,#16
+       580,#17
        720,#18
        720,#19
-       670,#20
-
-       290,#21
+       730,#20
+       
+       270,#21
+       270,#22
+       450,#23
+       530,#24
+       450,#25
+       530,#26
+       630,#27
+       670,#28
+       270,#29
+       580,#30
+       370,#31
+       
+       ]
+    """290,#21
        290,#22
        430,#23
        520,#24
@@ -739,41 +842,51 @@ def graph_data():
        670,#28
        290,#29
        560,#30
-       370,#31
-       ]
-    y=[-560,#1
-       -560,#2
-       -620,#3
-       -620,#4
-       -620,#5
-       -550,#6
-       -440,#7
-       -530,#8
-       -490,#9
-       -390,#10
-       -330,#11
-       -240,#12
+       370,#31"""
+    y=[-585,#1
+       -585,#2
+       -665,#3
+       -665,#4
+       -650,#5
+       -580,#6
+       -480,#7
+       -550,#8
+       -520,#9
+       -410,#10
+       -350,#11
+       -290,#12
        -160,#13
-       -340,#14
-       -340,#15
+       -370,#14
+       -370,#15
        -500,#16
-       -160,#17
-       -280,#18
-       -520,#19
-       -590,#20
+       -530,#17
+       -180,#18
+       -430,#19
+       -650,#20
 
-       -560,#21
-       -280,#22
-       -400,#23
-       -400,#24
-       -280,#25
-       -280,#26
-       -320,#27
-       -560,#28
-       -490,#29
-       -320,#30
-       -560,#31
+       -630,#21
+       -330,#22
+       -420,#23
+       -420,#24
+       -300,#25
+       -300,#26
+       -340,#27
+       -610,#28
+       -510,#29
+       -340,#30
+       -640,#31
     ]
+    """-580,#21
+       -300,#22
+       -420,#23
+       -420,#24
+       -300,#25
+       -300,#26
+       -340,#27
+       -580,#28
+       -510,#29
+       -340,#30
+       -580,#31"""
     return x,y
 
 @shared_task
@@ -789,7 +902,23 @@ def back_calc(T,speed_move,speed_watch,visit_spot,now_spot):
     path = pa.replace('[','')
     return path
 
+@shared_task
+def allview_calc():
+    time.sleep(1)
+    path=TSPCalc()
+    pd=str(path)
+    pa = pd.replace(']','')
+    path = pa.replace('[','')
+    return path
 
+@shared_task
+def test_calc():
+    time.sleep(1)
+    path=[0,1,2,3,0]
+    pd=str(path)
+    pa = pd.replace(']','')
+    path = pa.replace('[','')
+    return path
 
 """mid_time=time.time()
     userpath.now_time=mid_time

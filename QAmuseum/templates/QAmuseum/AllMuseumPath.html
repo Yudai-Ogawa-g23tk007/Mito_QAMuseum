@@ -13,7 +13,7 @@
     </head>
     <body>
         <header>
-            <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
+            <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-indigo">
                 <div class="container-fluid">
                     <a class="navbar-brand" href="#">大村記念学術館経路最適化</a>
                 </div>
@@ -30,11 +30,11 @@
         <a href="{% url 'CalculatePath' pk  %}"class="btn btn-danger btn-block" role="button" style="width:10em;
                 height:5em;margin-top:1em;"><p class='bg'>計算画面へ戻る</p></a>
         <a href="{% url 'MuseumPath' pk  %}"class="btn btn-success btn-block" role="button" style="width:10em;
-        height:5em;margin-top:1em;"><p class='bg'>案内を開始</p></a>
+        height:4em;margin-top:1em;"><p class='bg'>案内を開始</p></a>
         </div>
         </div>
         <div class="omura">
-        <div style="position:absolute;" ><img src="/media/map_all.png" ></div>
+        <div style="position:absolute;" ><img src="/media/map_all.png" width="100%"></div>
         <div style="position:relative;" class="pl"><img src="data:image/png;base64,{{graph|safe}}" class="pll"></div>
         </div>
         </main>

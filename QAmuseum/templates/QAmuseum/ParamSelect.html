@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+    {% block ul %}
+    <ul class="navbar-nav"><li class="nav-item"><a href="{% url 'Name_En' %}" class="nav-link">English</a></li></ul>
+    {% endblock %}
+    {% block body %}
+    <main>
+        巡回方法を選択してください<br>
+        <form method="POST" action="{% url 'ParameterSelect' pk=pk %}">{% csrf_token %}
+        <label><input type="radio" name="radio_option" value="option1" onclick="ChangeButton('計算開始')">全ての展示を見る</label><br>
+        <label><input type="radio" name="radio_option" value="option2" onclick="ChangeButton('次へ')">閲覧時間を設定しておすすめの展示を見る</label><br>
+        <input type="submit" value="次へ" id="submitButton" class="btn btn-success">
+        </form>
+        
+    </main>
+    <script>
+        function ChangeButton(newtext){
+            document.getElementById("submitButton").value=newtext;
+        }
+    </script>
+    {% endblock %}
