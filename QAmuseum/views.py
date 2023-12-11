@@ -472,11 +472,13 @@ def MuseumPath(request,pk):
             start_time=time.time()
             userpath.start_time=start_time
             userpath.save()
+        nex = OmuraMuseum.objects.get(pk=userpath.next_spot)
         object = {
             "path":userpath.path,
             "nowspot":userpath.now_spot+1,
             "nextspot":userpath.next_spot+1,
-            "pk":userpath.pk
+            "pk":userpath.pk,
+            "img":nex.image
             }
     nowsp=userpath.now_spot+1
     nextsp=userpath.next_spot+1
@@ -529,11 +531,13 @@ def MuseumPathEn(request,pk):
             start_time=time.time()
             userpath.start_time=start_time
             userpath.save()
+        nex = OmuraMuseum.objects.get(pk=userpath.next_spot)
         object = {
             "path":userpath.path,
             "nowspot":userpath.now_spot+1,
             "nextspot":userpath.next_spot+1,
-            "pk":userpath.pk
+            "pk":userpath.pk,
+            "img":nex.image
             }
     nowsp=userpath.now_spot+1
     nextsp=userpath.next_spot+1
@@ -563,6 +567,22 @@ def Evaluation(request,pk):
     else:
         form=EvaluationForm()
     return redirect("MuseumPath",pk)
+
+def EvaluationEn(request,pk):
+    if request.method=="POST":
+        form = EvaluationForm(request.POST)
+        if form.is_valid():
+            ev=form.cleaned_data["display_evaluation"]
+            if int(ev)==0:
+                print(ev)
+                return redirect("ArriveEn",pk)
+            else:
+                userpath=UserPath.objects.get(pk=pk)
+                spot=OmuraMuseum.objects.get(id=userpath.now_spot+1)
+                evaluation=MuseumEvaluation.objects.create(display_id=userpath.now_spot,display_name=spot.name,display_evaluation=ev,user_name=userpath.name,display_time=time.time()-userpath.now_time)
+    else:
+        form=EvaluationForm()
+    return redirect("MuseumPathEn",pk)
 
 def EvaluationTSP(request,pk):
     if request.method=="POST":
@@ -780,7 +800,7 @@ def ArriveEn(request,pk):
             pt=userpath.path.split(',')
             graph = Plot_graph(userpath.now_spot,userpath.next_spot,pt)
             object['graph']=graph
-            return render(request, "QAmuseum/MuseumPathEn.html",{'object':object,'pk':pk})
+            return render(request, "QAmuseum/MuseumPath_En.html",{'object':object,'pk':pk})
     
     userpath=UserPath.objects.get(pk=pk)
     path = userpath.path.split(',')
@@ -796,7 +816,7 @@ def ArriveEn(request,pk):
     value={"display_evaluation":0}
     form={"form":EvaluationEnForm(value)}
     object_spot.update(form) 
-    return render(request,"QAmuseum/ArriveEn.html",object_spot)
+    return render(request,"QAmuseum/Arrive_En.html",object_spot)
 
 
 #次の経路表示画面

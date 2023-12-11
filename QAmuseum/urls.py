@@ -22,6 +22,7 @@ urlpatterns=[
     path("Arrive/<int:pk>",views.Arrive,name="Arrive"),
     path("Arrive_En/<int:pk>",views.ArriveEn,name="ArriveEn"),
     path("Evaluation/<int:pk>",views.Evaluation,name="Evaluation"),
+    path("Evaluation_En/<int:pk>",views.EvaluationEn,name="EvaluationEn"),
     path("NextPath/<int:pk>",views.NextPath,name="NextPath"),
     path("End/<int:pk>",views.End,name="End"),
     path("End_En/<int:pk>",views.EndEn,name="EndEn"),

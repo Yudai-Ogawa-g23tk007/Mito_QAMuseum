@@ -1,0 +1,19 @@
+{% extends "base_En.html" %}
+    {% block ul %}
+    {% endblock %}
+
+    {% block body %}
+    <main>
+        <div class="container">
+        
+        <img src="/media/qamv.gif" width="500px">
+        <p>Calculate...</p></div>
+        <script>
+        setTimeout(
+        function() {
+            window.location.href = "{% url 'AllMuseumPathEn' pk %}";
+        },5000);
+    </script>
+        
+    </main>
+    {% endblock %}

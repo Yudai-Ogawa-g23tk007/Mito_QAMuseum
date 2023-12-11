@@ -10,7 +10,7 @@
         <!--<div class="text-center">
         <a href="{% url 'MuseumPath' pk%}" class="btn btn-danger btn-block" role="button"><p class="bg">次へ進む</p></a></div>-->
         <div class="text-center">
-        <form action="{% url 'Evaluation' pk%}" method="POST">
+        <form action="{% url 'EvaluationEn' pk%}" method="POST">
             {% csrf_token %}
             {{form.display_evaluation.label}}<br>
             {{form.display_evaluation}}<br>
