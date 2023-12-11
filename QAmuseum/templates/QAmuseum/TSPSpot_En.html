@@ -8,7 +8,7 @@
         <div class="bordered">{{name}}</div><br>
         Explain:<br>
         <div class="bordered">{{explain}}</div><br>
-        <img src="/media/{{img}}" width="300px"><br>
+        <img src="/media/{{img}}" width="720px"><br>
         <div class="text-center">
             <form action="{% url 'EvaluationTSPEn' pk%}" method="POST">
                 {% csrf_token %}

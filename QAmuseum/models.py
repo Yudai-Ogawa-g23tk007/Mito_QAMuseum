@@ -50,6 +50,7 @@ class UserPath(models.Model):
     browse = models.FloatField(default=1.0,choices=choice_browse)#閲覧時間
     path = models.CharField(max_length=1000,default="0, 7, 16, 14, 2, 1, 3, 4, 5, 10, 8, 6, 0")#計算した経路
     visit_path=models.CharField(max_length=1000,default="0")
+    must_spot=models.CharField(max_length=100,default="0")
     now_spot = models.IntegerField(default=0)#現在地点
     next_spot = models.IntegerField(default=7)#次の地点
     predict_time = models.FloatField(default=0)#予想巡回時間
@@ -58,8 +59,8 @@ class UserPath(models.Model):
     calculate_count = models.IntegerField(default=0)#計算回数
     count = models.IntegerField(default=0)
     #user = models.OneToOneField(User,on_delete=models.CASCADE,null=True,blank=True)
-    goal_time=models.IntegerField(default=0)
-    caluculate_back=models.CharField(default=0,max_length=100)
+    goal_time=models.IntegerField(default=0)#巡回にかかる時間
+    caluculate_back=models.CharField(default=0,max_length=100)#非同期処理パス
     calc_bool=models.BooleanField(default=False)
     count_time=models.FloatField(default=0)
     last_page=models.URLField(blank=True,default="")

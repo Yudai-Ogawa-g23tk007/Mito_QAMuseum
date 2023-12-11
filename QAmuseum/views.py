@@ -180,10 +180,11 @@ def TSPPathShow(request,pk):
         obj.calculate_count=1
         goaltime=GoalTime(pt,obj.speed,obj.browse)
         obj.goal_time=int(goaltime)
+        
         obj.save()
         
         graph = All_Plot_graph(pt)
-        ctx={'pk':pk,'path':path,"graph":graph,"goaltime":goaltime}
+        ctx={'pk':pk,'path':path,"graph":graph,"goaltime":obj.goal_time}
         return render(request,"QAmuseum/TSPPathShow.html",ctx)
     return render(request,"QAmuseum/TSPCalc.html",{'pk':pk})
 
@@ -201,10 +202,11 @@ def TSPPathShowEn(request,pk):
         obj.calculate_count=1
         goaltime=GoalTime(pt,obj.speed,obj.browse)
         obj.goal_time=int(goaltime)
+        
         obj.save()
         
         graph = All_Plot_graph(pt)
-        ctx={'pk':pk,'path':path,"graph":graph,"goaltime":goaltime}
+        ctx={'pk':pk,'path':path,"graph":graph,"goaltime":obj.goal_time}
         return render(request,"QAmuseum/TSPPathShow_En.html",ctx)
     return render(request,"QAmuseum/TSPCalc_En.html",{'pk':pk})
 
@@ -299,11 +301,15 @@ def Parameter(request,pk):
             time = form.cleaned_data["time"]
             speed = form.cleaned_data["speed"]
             browse=form.cleaned_data["browse"]
+            demand=form.cleaned_data["demand"]
             obj.time=time
             obj.speed=speed
             obj.browse=browse
             obj.count_time=0
             obj.calc_bool=False
+            mustvisit=[]
+            mustvisit.append(int(demand))
+            mustpath=str(mustvisit)
             obj.save()
             user_path=UserPath.objects.filter(pk=pk)
             for user_path in user_path:

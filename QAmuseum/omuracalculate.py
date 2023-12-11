@@ -199,7 +199,7 @@ def qa_stsp_decode(answer, start, speed_move, speed_watch, subroute,N,tm,ts):
     else:
         return [], 0, subroute
 
-def calculatepath(T,tt,br):
+def calculatepath(T,tt,br,must_visit=None):
     print(tt)
     N, tm, ts, sat = data()
     
@@ -210,8 +210,8 @@ def calculatepath(T,tt,br):
     
     
     speed_watch=1.0/br
-    
-    must_visit=[]
+    if must_visit is None:
+        must_visit=[]
     already_visit=[]
     flag = False
     #subroute=[]
