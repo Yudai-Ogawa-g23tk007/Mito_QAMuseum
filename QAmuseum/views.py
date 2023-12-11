@@ -553,7 +553,7 @@ def MuseumPath(request,pk):
             "nextspot":userpath.next_spot+1,
             "pk":userpath.pk,
             "map_img":nex.map_image,
-            "img":nex.image
+            "img":nex.image,
             }
     nowsp=userpath.now_spot+1
     nextsp=userpath.next_spot+1
