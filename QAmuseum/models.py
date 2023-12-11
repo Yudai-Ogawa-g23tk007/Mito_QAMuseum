@@ -15,6 +15,7 @@ class OmuraMuseum(models.Model):
     image=models.ImageField(upload_to='media/',blank=True)
     en_name=models.CharField(max_length=100,default="title")
     en_exp = models.TextField(default="text")
+    map_image=models.ImageField(upload_to='media/',blank=True)
     #sum_score=models.IntegerField(default=0)
 
 

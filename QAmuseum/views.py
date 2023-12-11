@@ -263,6 +263,8 @@ def TSPSpot(request,pk):
     object_spot={'name':spot.name,'explain':spot.exp,
                 "img":spot.image,
                 "pk":obj.pk}
+    value={"display_evaluation":0}
+    form={"form":EvaluationForm(value)}
     """
     value={"display_evaluation":0}
     form={"form":EvaluationForm(value)}
@@ -550,7 +552,8 @@ def MuseumPath(request,pk):
             "nowspot":userpath.now_spot+1,
             "nextspot":userpath.next_spot+1,
             "pk":userpath.pk,
-            "img":nex.image
+            "map_img":nex.map_image,
+            "img":nex.img
             }
     nowsp=userpath.now_spot+1
     nextsp=userpath.next_spot+1
