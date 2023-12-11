@@ -1,20 +1,20 @@
 {% extends "base_En.html" %}
     {% block ul %}
-    <ul class="navbar-nav"><li class="nav-item"><a href="{% url 'login' %}" class="nav-link">English</a></li></ul>
+    <ul class="navbar-nav"><li class="nav-item"><a href="{% url 'login' %}" class="nav-link">日本語</a></li></ul>
     {% endblock %}
         </div>
     </nav>
     </header>
     {% block body %}
-    <main>
-    <div class="container">
+    
+    <div class="container-fluid"><div class="text-center">
         <form method="POST">{% csrf_token %}
             {{form.as_p}}
         
-    <div class="text-center">
+    
         <button type="submit" class="btn btn-success btn-block">Next</button></form>
         <br><br>
-        <a href="{% url 'Name_En' %}">Back</a></div>
-    </main>
+        <a href="{% url 'Name_En' %}">Back</a></div></div>
+    
 
     {% endblock %}

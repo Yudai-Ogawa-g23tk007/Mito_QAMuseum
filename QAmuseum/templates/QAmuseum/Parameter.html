@@ -22,8 +22,8 @@
                 </div>
             </nav>
         </header>
-        <main>
-            <div class="container">
+        
+            <div class="container-fluid">
             <br><br>
                 <form method="POST">{% csrf_token %}
                     {% for field in form %}
@@ -32,16 +32,34 @@
                     <div class="form-center">
                     {{field | add_class:"form-param"}}</div>
                     {% if field.field.widget.attrs.label_type == 'f' %}                   
-                    <button name="add" type="submit" class="btn btn-block btn-add">+見たい展示を追加する</button>
-                    {% endif %}<br>
+                    <button type="button" id="add-demand" class="btn btn-block btn-add">+見たい展示を追加する</button>
+                    {% endif %}
                     {% endfor %}
             
                     <div class="text-center">
-                        <button type="submit" class="btn btn-success btn-block">計算実行</button>
-                    </div>
+                        <button type="submit" class="btn btn-success btn-block">計算実行</button><br><br>
+                        
+                    
                 </form>
-            
-            </div>
-        </main>
+            <a href="{% url 'ParameterSelect' pk %}">巡回方法選択画面へ戻る</a><br>
+            </div></div>
+            <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+            <script>
+                $(document).ready(function () {
+                    $("#add-demand").click(function () {
+                        // 新しい選択フィールドのコピーを作成
+                        var newDemandField = $("#id_demand").clone();
+
+                        // フィールドの名前を一意にするためにインデックスを更新
+                        var index = $("#my-form select[name^='demand']").length;
+                        newDemandField.attr('name', 'demand_' + index);
+                        newDemandField.attr('id', 'id_demand_' + index);
+
+                        // 新しいフィールドを追加
+                        $("#id_demand").after(newDemandField);
+                    });
+                });
+            </script>
+        
     </body>
 </html>

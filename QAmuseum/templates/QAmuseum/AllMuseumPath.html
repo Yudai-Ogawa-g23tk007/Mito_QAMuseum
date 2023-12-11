@@ -13,33 +13,30 @@
     </head>
     <body>
         <header>
-            <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-indigo">
+            <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-indigo p-1">
                 <div class="container-fluid">
                     <a class="navbar-brand" href="#">大村智記念学術館</a>
                 </div>
             </nav>
         </header>
         <br><br>
-        <main>
-        <div class="container">
+        
+        <div class="container-fluid">
         
         <div class="text-center">
-        この経路で案内を<br>
-        始めますか<br>
-        予測巡回時間 およそ{{goaltime}}分</div>
-        <a href="{% url 'ParameterSelect' pk %}">巡回方法選択画面へ戻る</a><br>
-        <a href="{% url 'Parameter' pk  %}">設定画面へ戻る</a><br>
-        <a href="{% url 'CalcPathWait' pk %}">再計算する</a>
-       
-        
+        予測巡回時間 <br>
+        {{goaltime}}分<br>
+         <a href="{% url 'Parameter' pk  %}">設定画面へ戻る</a><br>
         <div class="image-container">
         <img src="/media/map_all.png" width="720px">
         <img src="data:image/png;base64,{{graph|safe}}" >
-        </div><br><br><br><br><br><br><br><br>
+        </div><br>
+        <a href="{% url 'CalcPathWait' pk %}">再計算する</a><div class="text-center">
     <a href="{% url 'MuseumPath' pk  %}"class="btn btn-success btn-block" role="button" style="width:10em;
-        height:3em;margin-top:1em;"><p class='bg'>案内を開始</p></a>
+        height:3em;margin-top:1em;"><p class='bg'>案内を開始</p></a><br></div>
+       </div>
     </div>
-        </main>
+        
         
 
     </body>

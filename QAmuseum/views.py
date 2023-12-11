@@ -38,7 +38,7 @@ class Name(CreateView):
         form.fields['name'].widget.attrs['class']='large-textbox'
         form.fields['name'].label =''
         form.fields['password'].widget= forms.PasswordInput()
-        form.fields['password'].widget.attrs['placeholder'] = 'パスワード'
+        form.fields['password'].widget.attrs['placeholder'] = 'パスワード(数字4桁)'
         form.fields['password'].widget.attrs['class']='large-textbox'
         form.fields['password'].label=''
         return form
@@ -60,7 +60,7 @@ class Name_En(CreateView):
         form.fields['name'].widget.attrs['class']='large-textbox'
         form.fields['name'].label =''
         form.fields['password'].widget= forms.PasswordInput()
-        form.fields['password'].widget.attrs['placeholder'] = 'Password'
+        form.fields['password'].widget.attrs['placeholder'] = 'Enter a 4-digit number.'
         form.fields['password'].widget.attrs['class']='large-textbox'
         form.fields['password'].label=''
         return form
@@ -70,7 +70,7 @@ class Name_En(CreateView):
         pk=self.object.pk
         #print(type(username) is str)
         print(pk)
-        return reverse("Parameter",kwargs={'pk':pk})
+        return reverse("ParameterSelectEn",kwargs={'pk':pk})
 
 def Agree(request):
 
@@ -124,11 +124,11 @@ def ParameterSelectEn(request,pk):
     obj.last_page=request.build_absolute_uri()
     obj.save()
     if request.method == 'POST':
-        select_option = request.POST.get('radio_opt')
+        select_option = request.POST.get('radio_option')
         if select_option == 'option1':
-            return HttpResponseRedirect()
+            return HttpResponseRedirect(reverse('TSPCalcEn',args=[pk]))
         if select_option == 'option2':
-            return HttpResponseRedirect()
+            return HttpResponseRedirect(reverse('Parameter_En',args=[pk]))
     return render(request,"QAmuseum/ParamSelect_En.html",{'pk':pk})
 
 def CalcPathWait(request,pk):
@@ -217,13 +217,14 @@ def TSPNextPath(request,pk):
     object = {
         "path":obj.path,
         "nowspot":obj.now_spot+1,
-        "nextspot":obj.next_spot,
+        "nextspot":obj.next_spot+1,
         "pk":obj.pk
     }
     nows=OmuraMuseum.objects.get(id=obj.now_spot+1)
     nexts=OmuraMuseum.objects.get(id=obj.next_spot+1)
-    spot={"nospot_name":nows.name,
+    spot={"nowspot_name":nows.name,
           "nextspot_name":nexts.name,
+          "mapimg":nexts.map_image,
           "nextimg":nexts.image,
           }
     object.update(spot)
@@ -239,7 +240,7 @@ def TSPNextPathEn(request,pk):
     object = {
         "path":obj.path,
         "nowspot":obj.now_spot+1,
-        "nextspot":obj.next_spot,
+        "nextspot":obj.next_spot+1,
         "pk":obj.pk
     }
     nows=OmuraMuseum.objects.get(id=obj.now_spot+1)
@@ -265,10 +266,7 @@ def TSPSpot(request,pk):
                 "pk":obj.pk}
     value={"display_evaluation":0}
     form={"form":EvaluationForm(value)}
-    """
-    value={"display_evaluation":0}
-    form={"form":EvaluationForm(value)}
-    object_spot.update(form)"""
+    object_spot.update(form)
     return render(request,"QAmuseum/TSPSpot.html",object_spot)
 
 def TSPSpotEn(request,pk):
@@ -280,10 +278,9 @@ def TSPSpotEn(request,pk):
     object_spot={'name':spot.name,'explain':spot.exp,
                 "img":spot.image,
                 "pk":obj.pk}
-    """
     value={"display_evaluation":0}
     form={"form":EvaluationForm(value)}
-    object_spot.update(form)"""
+    object_spot.update(form)
     return render(request,"QAmuseum/TSPSpot_En.html",object_spot)
 
 
@@ -294,38 +291,40 @@ def Parameter(request,pk):
     obj=UserPath.objects.get(pk=pk)
     obj.last_page=request.build_absolute_uri()
     obj.save()
-    initial_values={"time":obj.time,"speed":obj.speed,"browse":obj.browse,"demand":'0'}
+    initial_values={"time":obj.time,"speed":obj.speed,"browse":obj.browse,"demand":0}
     form = parameterform(initial_values)
     ctx={"form":form,'pk':pk}
-    if request.POST:
+    if request.method=='POST':
         form=parameterform(request.POST)
+        dynamic_demand_fields = [field for field in request.POST if field.startswith('demand_')]
+        for field_name in dynamic_demand_fields:
+            form.fields[field_name] = forms.ChoiceField(
+                widget=forms.Select(attrs={'label_type': 'f'}),
+                label="Place to see",
+                choices=form.fields['demand'].choices,
+                required=False
+            )
         if form.is_valid():
             time = form.cleaned_data["time"]
             speed = form.cleaned_data["speed"]
             browse=form.cleaned_data["browse"]
-            demand=form.cleaned_data["demand"]
+            demand=[]
+            demand.append(int(form.cleaned_data["demand"]))
+            for form.field_name in dynamic_demand_fields:
+                demand.append(int(form.cleaned_data[field_name]))
+            print(form.cleaned_data)
             obj.time=time
             obj.speed=speed
             obj.browse=browse
             obj.count_time=0
             obj.calc_bool=False
-            mustvisit=[]
-            mustvisit.append(int(demand))
-            mustpath=str(mustvisit)
+            
+            print(demand)
+            
+            obj.must_spot=str(demand)
             obj.save()
-            user_path=UserPath.objects.filter(pk=pk)
-            for user_path in user_path:
-                object={
-                    "path":user_path.path,
-                    "nowspot":user_path.now_spot+1,
-                    "nextspot":user_path.next_spot+1,
-                    "pk":user_path.pk
-                }
-            object=UserPath.objects.get(pk=pk)
-            #return render(request,"QAmuseum/CalculatePath.html/",{"pk":pk,"user_path":object})
-            #return reverse("MuseumPath",kwargs={"pk":pk,"user_path":object})
-            #return render(request,"QAmuseum/CalculatePath.html/",{'object':object,'pk':pk})
-            return HttpResponseRedirect(reverse('CalcPathWait',args=[pk]))
+            return redirect('CalcPathWait',pk)
+        
     return render(request, "QAmuseum/Parameter.html",ctx)
 
 def Parameter_En(request,pk):
@@ -338,15 +337,28 @@ def Parameter_En(request,pk):
     ctx={"form":form,'pk':pk}
     if request.POST:
         form=parameterform(request.POST)
+        dynamic_demand_fields = [field for field in request.POST if field.startswith('demand_')]
+        for field_name in dynamic_demand_fields:
+            form.fields[field_name] = forms.ChoiceField(
+                widget=forms.Select(attrs={'label_type': 'f'}),
+                label="Place to see",
+                choices=form.fields['demand'].choices,
+                required=False
+            )
         if form.is_valid():
             time = form.cleaned_data["time"]
             speed = form.cleaned_data["speed"]
             browse=form.cleaned_data["browse"]
+            demand=[]
+            demand.append(int(form.cleaned_data["demand"]))
+            for form.field_name in dynamic_demand_fields:
+                demand.append(int(form.cleaned_data[field_name]))
             obj.time=time
             obj.speed=speed
             obj.browse=browse
             obj.count_time=0
             obj.calc_bool=False
+            obj.must_spot=str(demand)
             obj.save()
             user_path=UserPath.objects.filter(pk=pk)
             for user_path in user_path:
@@ -363,29 +375,7 @@ def Parameter_En(request,pk):
             return HttpResponseRedirect(reverse('CalcPathWaitEn',args=[pk]))
     return render(request, "QAmuseum/Parameter_En.html",ctx)
 
-
-#計算画面
-""""
-class CalculatePath(ListView):
-    template_name="QAmuseum/CalculatePath.html"
-    context_object_name="user_path"
-    
-    model=UserPath
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        queryset=UserPath.objects.filter(pk=self.kwargs['pk'])
-"""
 def CalculatePath(request,pk):
-    """"
-    user_path=UserPath.objects.filter(pk=pk)
-    for user_path in user_path:
-        object={
-            "path":user_path.path,
-            "nowspot":user_path.now_spot+1,
-            "nextspot":user_path.next_spot+1,
-            "pk":user_path.pk
-        }
-        """
     object=UserPath.objects.get(pk=pk)
     object.last_page=request.build_absolute_uri()
     object.save()
@@ -546,7 +536,7 @@ def MuseumPath(request,pk):
             start_time=time.time()
             userpath.start_time=start_time
             userpath.save()
-        nex = OmuraMuseum.objects.get(pk=userpath.next_spot)
+        nex = OmuraMuseum.objects.get(pk=userpath.next_spot+1)
         object = {
             "path":userpath.path,
             "nowspot":userpath.now_spot+1,
@@ -609,13 +599,14 @@ def MuseumPathEn(request,pk):
             start_time=time.time()
             userpath.start_time=start_time
             userpath.save()
-        nex = OmuraMuseum.objects.get(pk=userpath.next_spot)
+        nex = OmuraMuseum.objects.get(pk=userpath.next_spot+1)
         object = {
             "path":userpath.path,
             "nowspot":userpath.now_spot+1,
             "nextspot":userpath.next_spot+1,
             "pk":userpath.pk,
-            "img":nex.image
+            "img":nex.image,
+            "map_img":nex.map_image
             }
     nowsp=userpath.now_spot+1
     nextsp=userpath.next_spot+1
@@ -745,31 +736,7 @@ def Arrive(request,pk):
                     userpath.caluculate_back=pt.id
                     userpath.calc_bool=True
                     userpath.save()
-                    """
-                    path=recalculate(T,speed_move,speed_watch,visit_spot,now_spot)
-                    if len(path) >2:
-                        userpath.next_spot=path[1]
-                        #print(path)
-                        pd=str(path)
-                        pa = pd.replace(']','')
-                        path = pa.replace('[','')
-                        userpath.path=path
-                        userpath.count=0
-                        userpath.start_time=time.time()
-                        userpath.calculate_count =userpath.calculate_count+1
-                        userpath.save()
-                    else:
-                        userpath.next_spot=0
-                        now_spot=userpath.now_spot
-                        path=[]
-                        path.append(now_spot)
-                        path.append(0)
-                        pd=str(path)
-                        pa = pd.replace(']','')
-                        path = pa.replace('[','')
-                        userpath.path=path
-                        userpath.count=0"""
-            #userpath.save()
+                    
             else:
                 return redirect("End",pk)
         if "reset" in request.GET:

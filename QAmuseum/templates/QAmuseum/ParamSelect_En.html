@@ -2,17 +2,20 @@
     {% block ul %}
     {% endblock %}
     {% block body %}
-    <main>
-        <div class="container">
-        Please select a patrol method<br>
-        <form method="POST" action="{% url 'ParameterSelect' pk=pk %}">{% csrf_token %}
-        <label><input type="radio" name="radio_option" value="option1" onclick="ChangeButton('計算開始')">View All</label><br>
-        <label><input type="radio" name="radio_option" value="option2" onclick="ChangeButton('次へ')">View recommended exhibits</label><br>
+    
+        <div class="container-fluid"><div class="text-center">
+        Please select a patrol method<br></div>
+        <div class="formselect">
+        <form method="POST" action="{% url 'ParameterSelectEn' pk=pk %}">{% csrf_token %}
+        <label><input type="radio" name="radio_option" value="option1" onclick="ChangeButton('Start to calculate')">View All</label><br>
+        <label><input type="radio" name="radio_option" value="option2" onclick="ChangeButton('Next')">View recommended exhibits</label><br>
+        </div>
+        <div class="text-center">
         <input type="submit" value="Next" id="submitButton" class="btn btn-success">
-        </form>
+        </form></div>
         </div>
         
-    </main>
+    
     <script>
         function ChangeButton(newtext){
             document.getElementById("submitButton").value=newtext;

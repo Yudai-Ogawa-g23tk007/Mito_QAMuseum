@@ -4,26 +4,27 @@
                     {% endblock %}
                 
         {% block body %}
-        <main>
-            <div class="container">
+        
+            <div class="container-fluid">
         <div class="text-center">
             <p class="name-title">大村智記念学術館<br>
-            おすすめ<br>ルートシステム</p></div>
+            おすすめルートシステム</p></div>
         <div class="text-center">
-            <p font-size="16px">名前とパスワード（8桁数字）を入力してください</p>
+            
             
         <form method="POST">{% csrf_token %}
             {{form.as_p}}
-            
+
+            <p class="mini">再ログイン用パスワードは任意に設定</p>
         </div>
 
             <div class="text-center">
-            <button type="submit" class="btn btn-success btn-block">始める</button>
+            <button type="submit" class="btn btn-success btn-block">はじめる</button>
         </form>
         <br><br>
-        <a href = "{% url 'login' %}">再ログイン</a>
+        <a href = "{% url 'login' %}">再ログイン</a>&emsp;&emsp;
         <a href = "{% url 'Agree' %}">同意書</a></div>
             </div>
-        </main>
+        
     
     {% endblock %}

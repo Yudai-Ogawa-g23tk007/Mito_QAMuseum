@@ -1,6 +1,7 @@
 from django import forms
 from django.core.validators import MinValueValidator
 from .models import UserPath
+from django.core.validators import MinLengthValidator
 
 class parameterform(forms.Form):
     def __init__(self, *args, **kwargs):
@@ -23,28 +24,28 @@ class parameterform(forms.Form):
     )
     browse = forms.ChoiceField(label="閲覧時間",choices=choice_browse)
     choice_demand = (
-        ('0',"なし"),
-        ('1',"メダル"),
-        ('2',"瑞宝重光章"),
-        ('3',"大村智年譜"),
-        ('4',"研究業績"),
-        ('5',"文化勲章"),
-        ('6',"称号記"),
-        ('7',"発酵生産学科写真プレート"),
-        ('8',"卒論"),
-        ('9',"博論"),
-        ('10',"化学式模型"),
-        ('11',"ビデオ上映"),
-        ('12',"ギャラリー"),
-        ('13',"トロフィー"),
-        ('14',"来学時の写真"),
-        ('15',"座右の銘"),
-        ('16',"昭和時代の写真"),
-        ('17',"徴典館"),
-        ('18',"さとっちゃん"),
-        ('19',"SDGs研究紹介"),
+        (0,"なし"),
+        (1,"メダル"),
+        (2,"瑞宝重光章"),
+        (3,"大村智年譜"),
+        (4,"研究業績"),
+        (5,"文化勲章"),
+        (6,"称号記"),
+        (7,"発酵生産学科写真プレート"),
+        (8,"卒論"),
+        (9,"博論"),
+        (10,"化学式模型"),
+        (11,"ビデオ上映"),
+        (12,"ギャラリー"),
+        (13,"トロフィー"),
+        (14,"来学時の写真"),
+        (15,"座右の銘"),
+        (16,"昭和時代の写真"),
+        (17,"徴典館"),
+        (18,"さとっちゃん"),
+        (19,"SDGs研究紹介"),
     )
-    demand = forms.ChoiceField(widget=forms.Select(attrs={'label_type': 'f'}),label="絶対に見たい展示",choices=choice_demand)
+    demand = forms.ChoiceField(label="絶対に見たい展示",choices=choice_demand,widget=forms.Select(attrs={'label_type': 'f'}),required=False,initial=0)
 
 class parameterEnform(forms.Form):
     def __init__(self, *args, **kwargs):
@@ -88,7 +89,7 @@ class parameterEnform(forms.Form):
         (18,"Special Exhibit Corner"),
         (19,"SDGs Research"),
     )
-    demand = forms.ChoiceField(widget=forms.Select(attrs={'label_type': 'f'}),label="Place to see",choices=choice_demand)
+    demand = forms.ChoiceField(widget=forms.Select(attrs={'label_type': 'f'}),label="Place to see",choices=choice_demand,required=True)
 
 class NameForm(forms.ModelForm):
     class Meta:
@@ -127,5 +128,5 @@ class LoginForm(forms.Form):
         self.label_suffix = " "
         """
     name = forms.CharField(label='name',max_length=20)
-    password = forms.CharField(label='password',widget=forms.PasswordInput(),max_length=8)
+    password = forms.CharField(label='password',widget=forms.PasswordInput(),max_length=4,validators=[MinLengthValidator(4)])
 

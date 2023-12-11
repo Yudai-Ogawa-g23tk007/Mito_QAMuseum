@@ -28,8 +28,8 @@ urlpatterns=[
     path("End_En/<int:pk>",views.EndEn,name="EndEn"),
     path("login",views.Login,name="login"),
     path("login_en",views.Login_En,name="loginEn"),
-    path("Agree",views.Agree,name="Agree"),
-    path("Terms",views.AgreeEn,name="AgreeEn"),
+    path("Agreement",views.Agree,name="Agree"),
+    path("AgreementEn",views.AgreeEn,name="AgreeEn"),
     path("ParameterSelect/<int:pk>/",views.ParameterSelect,name="ParameterSelect"),
     path("ParameterSelectEn/<int:pk>/",views.ParameterSelectEn,name="ParameterSelectEn"),
     path("TSPCalc/<int:pk>",views.TSPCalc,name="TSPCalc"),
@@ -41,5 +41,5 @@ urlpatterns=[
     path("EvaluationTSP/<int:pk>",views.EvaluationTSP,name="EvaluationTSP"),
     path("EvaluationTSPEn/<int:pk>",views.EvaluationTSPEn,name="EvaluationTSPEn"),
     path("TSPNextPath/<int:pk>",views.TSPNextPath,name="TSPNextPath"),
-    
+    path("TSPNextPathEn/<int:pk>",views.TSPNextPathEn,name="TSPNextPathEn")
 ]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

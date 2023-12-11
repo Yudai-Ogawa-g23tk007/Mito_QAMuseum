@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
+from django.core.validators import MinLengthValidator
 # Create your models here.
 
 #大村記念館の各地点データ
@@ -65,7 +66,7 @@ class UserPath(models.Model):
     calc_bool=models.BooleanField(default=False)
     count_time=models.FloatField(default=0)
     last_page=models.URLField(blank=True,default="")
-    password = models.CharField(default="",max_length=8)
+    password = models.CharField(default="",max_length=4,validators=[MinLengthValidator(4)])
     def __str__(self):
         return self.name
 

@@ -3,18 +3,18 @@
     {% endblock %}
 
     {% block body %}
-    <main>
-        <div class="container">
-        
+    
+        <div class="container-fluid">
+        <div class="calc-center">
         <img src="/media/qamv.gif" width="720px">
-        <div class="text-center">
+        
         <p>計算中です．</p></div></div>
         <script>
         setTimeout(
         function() {
             window.location.href = "{% url 'AllMuseumPath' pk %}";
-        },5000);
+        },3000);
     </script>
         
-    </main>
+    
     {% endblock %}

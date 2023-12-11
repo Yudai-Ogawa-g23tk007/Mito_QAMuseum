@@ -11,39 +11,38 @@
         <link rel="stylesheet" href="{% static 'QAmuseum/style.css' %}">
         
         <title>
-            Terms of Use
+            Agreement
         </title>
     </head>
 <body>
     <header>
-        <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-indigo">
+        <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-indigo p-1">
             <div class="container-fluid">
-               <a class="navbar-brand" href="#">Terms of Use</a>
+               <a class="navbar-brand" href="#">Agreement</a>
                <ul class="navbar-nav"><li class="nav-item"><a href="{% url 'Agree' %}" class="nav-link">日本語</a></li></ul>
             </div>
         </nav>
     </header>
     <br>
     <br>
-    <div class="container agree">
-
-   
+    <div class="container-fluid">
+    <div class="text-center">
     <div class="agree-title">
-    IPA MITOU target program project<br><br>
-    Museum Tour Optimization Application <br>
-    Using Annealing Machine <br>
-    Terms of Use</div><br>
-    <div>
-    About This Project<br><div class="bordered">
+    IPA MITOU target program project
+    Museum Tour Optimization Application 
+    Using Annealing Machine 
+    Agreement</div><br>
+    
+    <p class="agree-title">About This Project</p><br>
     The goal of this project is to create opportunities for the general public to experience quantum computing technology. We aim to achieve this by developing a museum tour optimization application using an annealing machine 
-    (https://www.ipa.go.jp/jinzai/mitou/target/<br>2023/gaiyou_ts-1.html). This project is conducted with the support of the Information-technology Promotion Agency, Japan (IPA) Unexplored Target Project (https://www.ipa.go.jp/jinzai/mitou/target/index.html).
-    ://www.ipa.go.jp/jinzai/mitou/target/2023/gaiyou_ts-1.html）.</div>
+    (https://www.ipa.go.jp/jinzai/mitou/target/<br>2023/gaiyou_ts-1.html). This project is conducted with the support of the Information-technology Promotion Agency, Japan (IPA) Unexplored Target Project (https://www.ipa.go.jp/jinzai/mitou/<br>target/index.html).
+    
     <br><br>
-    Application Terms of Use:
-    <br><div class="bordered">
-    This application is intended for the evaluation of a museum tour optimization application using an annealing machine. After using the application to tour a museum, users will be requested to respond to a survey for evaluation purposes. 
+    <p class="agree-title">Application Agreement:</p>
     <br>
-    Please note the following when using the application:
+    This application is intended for the evaluation of a museum tour optimization application using an annealing machine. After using the application to tour a museum, users will be requested to respond to a survey for evaluation purposes. 
+    <br><br>
+    <p class="agree-title">Please note the following when using the application:</p>
     <br>
     • Data such as displayed routes and touring times collected by the application will be used for evaluation. However, we do not collect data other than the information entered into the application and the data displayed by the application.
     <br>
@@ -52,12 +51,12 @@
     • Use of the application for purposes other than touring a museum is strictly prohibited.
     <br>
     • Starting to use the application implies agreement to these terms of use.
-    </div>
+    
 
-    <br>
+    <br><br>
 
-    Important Notes:<br><br>
-    <div class="bordered">
+    <p class="agree-title"> Notes:</p><br>
+    
     1. Handling of Personal Information and Data:
     <br>
     The acquired data and personal information will not be used for purposes other than this project and related research. Additionally, since the data is collected anonymously, personal information will be kept confidential even when presenting research through conferences, research presentations, journals, etc.
@@ -74,11 +73,11 @@
 
     4. Payment of Honorarium:
     <br>
-    As this evaluation relies on voluntary participation, no honorarium or payment is provided.</div>
+    As this evaluation relies on voluntary participation, no honorarium or payment is provided.
     <br>
     <br>
     If you have any questions about this experiment, please feel free to contact us.
-    <br><br></div>
+    <br><br>
     <div>
     【Principal Investigator】
     <br>
@@ -96,6 +95,7 @@
     g23tk007@yamanashi.ac.jp<br><br>
     </div>
         <a href="{% url 'Name_En' %}">Agree</a>
-        </div>
+        </div></div>
+
     </body>
     </html>

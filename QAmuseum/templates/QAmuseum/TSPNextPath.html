@@ -2,14 +2,14 @@
     {% block ul %}
     {% endblock %}
     {% block body %}
-    <div class="container">
-        <main>
+    <div class="container-fluid">
+        
             <div style="position:relative;z-index: 990;">
-                現在地点 {{nowspot}} {{nowspot_name}}<br>
-                次の地点 {{nextspot}} {{nextspot_name}}
+                <p class="spot">現在地点 <br></p>
+                <p class="text-center">{{nowspot_name}}<br></p>
+                <p class="spot">次の地点 <br></p>
+                <p class="text-center">{{nextspot_name}}</p>
                 <div class="text-center">
-                    
-                
                     <div class="mx-auto btn-group">
                     <!--<form action="{% url 'MuseumPath' pk%}",method='GET'><button type="submit" name="reset" class="btn btn-danger btn-block"><p class='bg'>戻る</p></button></form>-->
                     <form action="{% url 'TSPSpot' pk%}",method='GET'>
@@ -17,11 +17,11 @@
                 </form></div>
                 </div><br>
                 <div class="image-container">
-                    <img src="/media/map_all.png" width="720px">
+                    <img src="/media/{{mapimg}}" width="720px">
                     <img src="data:image/png;base64,{{graph|safe}}">
                 </div>
-                <img src="{{img}}" wdith="720px">
-        </main>
+                <img src="/media/{{nextimg}}" wdith="720px">
+        
         
     </div>
     {% endblock %}

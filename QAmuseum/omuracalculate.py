@@ -70,7 +70,7 @@ def qa_stsp(T, start, speed_move, speed_watch, must_visit, already_vist, subrout
     elif T <= 20:
         p = 10
     else:
-        p = 4
+        p = 8
     print(p)
     # T = 60 p = 9
     # T = 70 p = 9
@@ -80,7 +80,7 @@ def qa_stsp(T, start, speed_move, speed_watch, must_visit, already_vist, subrout
     client = FixstarsClient()
    #client.token = "mwve4EyfjZgVTuENPRDQc9cdTgxhWPxP"
     client.token="4rCqRgV5trByWr7BDlTgTFu8GMznfGUy"
-    client.parameters.timeout = 1
+    client.parameters.timeout = 10
 
     solver = Solver(client)
     result = solver.solve(model)

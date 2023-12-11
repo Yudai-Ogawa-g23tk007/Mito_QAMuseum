@@ -2,21 +2,22 @@
     {% block ul %}
     {% endblock %}
     {% block body %}
-    <main>
-        <div class="container">
+    
+        <div class="container-fluid">
             <div class="text-center">
-                Would you like to start guiding on this route?<br>
-                Estimated tour time: approx. {{goaltime}} min.<br></div>
+               <p class="end-text"> Estimated tour time: <br> {{goaltime}} min.<br></p>
+            <a href="{% url 'ParameterSelectEn' pk %}">Back to the setting</a><br>
+            </div>
         <div class="image-container">
         <img src="/media/map_all.png" width="720px">
         <img src="data:image/png;base64,{{graph|safe}}">
         
-        </div><div class="image-text">
-        <a href="{% url 'TSPCalc' pk %}">Return to patrol method selection</a><br>
-        <a href="{% url 'ParameterSelect' pk %}">Back to the setting</a><br>
-        <a href="{% url 'TSPSpot' pk %}">Recalculate</a></div>
+        </div><div class="text-center">
+        <a href="{% url 'TSPCalcEn' pk %}">Recalculate</a><br>
+        
+        <button id="startnavi" class="btn btn-success btn-block">Next</button></div>
     </div>
-    </main>
+    
     <script>
         document.addEventListener('DOMContentLoaded', function () {
             var image = document.querySelector('.image-container img');
@@ -25,5 +26,9 @@
                 this.classList.toggle('enlarged');
             });
         });
+        document.getElementById('startnavi').addEventListener('click', function() {
+    var url = "{% url 'TSPSpotEn' pk %}";
+    window.location.href = url;
+  });
     </script>
     {% endblock %}

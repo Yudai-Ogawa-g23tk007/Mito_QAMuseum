@@ -4,14 +4,15 @@
     {% endblock %}
 
     {% block body %}
-        <main>
-            <div class="container">
+        
+            <div class="container-fluid">
+            <div class="text-center">
             <p class="end-text">
-                {{name}}さん お疲れ様でした.<br><br>
-                ゴールするまでに<br>量子コンピュータで<br>{{count}}回計算を行いました．<br><br>
+                <p class="end-bg">{{name}}さん<br> お疲れ様でした.</p><br><br>
+                ゴールするまでに<br>量子コンピュータで<br><p class="end-bg">{{count}}回</p>計算を行いました．<br><br>
                 <a href = "https://amplify.fixstars.com/ja/techresources/about-quantum-computer/">量子コンピュータとは？</a><br><br>
                 <a href = "">アンケートにご協力ください</a><br>
                 ブラウザを閉じて終了してください．<br>
-            </p></div>
-        </main>
+            </p></div></div>
+        
     {% endblock %}

@@ -2,14 +2,15 @@
     {% block ul %}
     {% endblock %}
     {% block body %}
-    <main>
-        <div class="container">
-        現在地点:<br>
-        <div class="bordered">{{name}}</div><br>
-        説明:<br>
-        <div class="bordered">{{explain}}</div><br>
-        <img src="/media/{{img}}" width="720px"><br>
+    
+        <div class="container-fluid">
+        <p class="spot">現在地点:<br></p>
+        <p class="text-center">{{name}}<br></p>
+        <p class="spot">説明:<br></p>
+        <p class="text-center">{{explain}}<br></p>
         <div class="text-center">
+        <img src="/media/{{img}}" width="720px"><br><br>
+        
             <form action="{% url 'EvaluationTSP' pk%}" method="POST">
                 {% csrf_token %}
                 {{form.display_evaluation.label}}<br>
@@ -18,5 +19,5 @@
     
             </form></div>
         </div>
-    </main>
+    
     {% endblock %}

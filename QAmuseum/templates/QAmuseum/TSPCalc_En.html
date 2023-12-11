@@ -2,14 +2,15 @@
     {% block ul %}
     {% endblock %}
     {% block body %}
-    <div class = "container">
+    <div class = "container-fluid">
+        <div class="calc-center">
     <img src="/media/qamv.gif" width="720px">
-    <div class="text-center">
+    
     <p>calculate...</p></div></div>
     <script>
         setTimeout(
         function() {
-            window.location.href = "{% url 'TSPPathShow' pk %}";
+            window.location.href = "{% url 'TSPPathShowEn' pk %}";
         },2000);
     </script>
     {% endblock %}
