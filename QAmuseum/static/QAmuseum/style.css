@@ -268,7 +268,7 @@ img{
 /* モーダル内の画像のスタイル */
 .modal-content {
     position: absolute;
-    transform: scale(1.1); 
+    transform: scale(1.25); 
     margin: 10% 10%;
     display: block;
     max-width: 80%;
@@ -277,7 +277,7 @@ img{
 }
 .modal-content-second {
     position: absolute;
-    transform: scale(1.65); 
+    transform: scale(1.875); 
     margin: 10% 10%;
     display: block;
     max-width: 80%;
