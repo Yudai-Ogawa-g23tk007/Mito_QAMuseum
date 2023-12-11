@@ -76,6 +76,9 @@ def Agree(request):
 
     return render(request,"QAmuseum/Agree.html")
 
+def AgreeEn(request):
+    return render(request,"QAmuseum/Agree_En.html")
+
 def Login(request):
     form = LoginForm()
     ctx = {"form"}
