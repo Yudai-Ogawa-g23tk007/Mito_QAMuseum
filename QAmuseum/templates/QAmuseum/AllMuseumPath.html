@@ -15,7 +15,7 @@
         <header>
             <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-indigo">
                 <div class="container-fluid">
-                    <a class="navbar-brand" href="#">大村記念学術館経路最適化</a>
+                    <a class="navbar-brand" href="#">大村智記念学術館</a>
                 </div>
             </nav>
         </header>
@@ -27,16 +27,18 @@
         この経路で案内を<br>
         始めますか<br>
         予測巡回時間 およそ{{goaltime}}分</div>
-        
+        <a href="{% url 'ParameterSelect' pk %}">巡回方法選択画面へ戻る</a>
         <a href="{% url 'Parameter' pk  %}">設定画面へ戻る</a>
-        <a href="{% url 'MuseumPath' pk  %}"class="btn btn-success btn-block" role="button" style="width:10em;
-        height:4em;margin-top:1em;"><p class='bg'>案内を開始</p></a>
+        <a href="{% url 'CalcPathWait' pk %}">再計算する</a>
        
         
         <div class="image-container">
         <img src="/media/map_all.png" width="720px">
         <img src="data:image/png;base64,{{graph|safe}}" >
-        </div></div>
+        </div><br><br><br><br><br><br><br><br>
+    <a href="{% url 'MuseumPath' pk  %}"class="btn btn-success btn-block" role="button" style="width:10em;
+        height:3em;margin-top:1em;"><p class='bg'>案内を開始</p></a>
+    </div>
         </main>
         
 

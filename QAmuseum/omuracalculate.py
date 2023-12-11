@@ -248,7 +248,7 @@ def find_path(start,already_vist,N,tm):
     gen = BinarySymbolGenerator()
     x = gen.array(N, N)
 
-    cost = sum_poly(N, lambda n: sum_poly(N, lambda i: sum_poly(N, lambda j: tm[i+1][j+1]*x[n][i]*x[n+1][j]))) + sum_poly(N, lambda i: tm[start][i+1]*x[0][i] + tm[i+1][0]*x[N-1][i]) # 移動時間の最小化
+    cost = sum_poly(N-1, lambda n: sum_poly(N-1, lambda i: sum_poly(N-1, lambda j: tm[i+1][j+1]*x[n][i]*x[n+1][j]))) + sum_poly(N-1, lambda i: tm[start][i+1]*x[0][i] + tm[i+1][0]*x[N-1][i]) # 移動時間の最小化
     const1 = sum_poly(N, lambda n: (sum_poly(N, lambda i: x[n][i]) - 1)**2)  # 全ての地点を通る
     const2 = sum_poly(N, lambda i: (sum_poly(N, lambda n: x[n][i]) - 1)**2)  # 同時に1地点だけ通る
 
@@ -278,15 +278,23 @@ def find_path(start,already_vist,N,tm):
 
     return path, energy, at
 
-def TSPCalc():
+def TSPCalculate():
     N,tm,ts,sat = data()
     path=[]
     already_visit=[]
     start = 0
-    N -=1
+    N -= 1
     re_opt = -1
     while path == [] and re_opt < 10:
         path,energy,at = find_path(start,already_visit,N,tm)
         re_opt += 1
     
     return path
+
+def GoalTime(path,start,speed_move,speed_watch):
+    N,tm,ts,sat = data()
+    route_time = 0
+    for p in range(1,len(path)):
+        route_time += tm[path[p-1]][path[p]]*60/speed_move
+        route_time += ts[path[p]]*speed_watch
+    route_time -= ts[0]*speed_watch

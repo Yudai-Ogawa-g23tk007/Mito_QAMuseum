@@ -35,8 +35,10 @@ def Output_graph():
     buffer.close()
     return graph
 """
-def Next_imgae(next_spot):
-    next_img={i: f"media/media/omura_{i}.png" for i in range(0, 19)}
+def Next_img(next_spot):
+    next_img={i: f"/map_{i}.png" for i in range(0, 19)}
     if next_spot in next_img:
-        img = next_img[next_spot]
-    return img
+        print(next_img[0])
+        return next_img[next_spot]
+    
+    

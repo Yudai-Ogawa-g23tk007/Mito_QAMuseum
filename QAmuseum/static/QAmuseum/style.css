@@ -156,6 +156,7 @@ input[type="radio"] {
 
 .image-container{
     position: relative;
+    
 }
 
 .image-container img {
@@ -163,6 +164,11 @@ input[type="radio"] {
     height:auto;
     position: absolute;
     margin-bottom: 1em;
+    transition: transform 0.3s ease;
+}
+
+.image-container img.enlarged {
+    transform: scale(1.5); /* タッチ時に拡大表示 */
 }
 
 .image-container img:first-child {
@@ -175,4 +181,15 @@ input[type="radio"] {
 .image-text{
     position: absolute;
     margin-top: 800px;
+}
+
+.zoom-box {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(255, 255, 255, 0.3);
+    display: none;
+    cursor: zoom-in;
 }

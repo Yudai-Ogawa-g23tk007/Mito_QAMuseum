@@ -6,10 +6,21 @@
         <div class="container">
         <div class="image-container">
         <img src="/media/map_all.png" width="720px">
-        <img src="data:image/png;base64,{{graph|safe}}"></div><div class="image-text">
+        <img src="data:image/png;base64,{{graph|safe}}">
+        
+        </div><div class="image-text">
         <a href="{% url 'TSPCalc' pk %}">再計算実行</a><br>
         <a href="{% url 'ParameterSelect' pk %}">設定画面へ戻る</a><br>
         <a href="{% url 'TSPSpot' pk %}">経路案内を開始する</a></div>
     </div>
     </main>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            var image = document.querySelector('.image-container img');
+    
+            image.addEventListener('click', function () {
+                this.classList.toggle('enlarged');
+            });
+        });
+    </script>
     {% endblock %}

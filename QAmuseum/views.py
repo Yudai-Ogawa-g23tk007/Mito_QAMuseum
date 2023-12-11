@@ -1,10 +1,11 @@
 from typing import Any, Dict
 from django.forms.models import BaseModelForm
-from django.shortcuts import render, reverse,redirect
+from django.shortcuts import render,redirect
 from django.http import HttpResponse,HttpResponseRedirect
 from django.contrib.auth.models import User
 from .models import UserPath,OmuraMuseum,MuseumEvaluation
-from .omuracalculate import calculatepath,time_for_move_calc,time_stay,recalculate,data,TSPCalc
+from .omuracalculate import calculatepath,time_for_move_calc,time_stay,recalculate,data,TSPCalculate,GoalTime
+from .omurapix import Next_img
 from QAmuseum.views_modules import module
 from django.views.generic import ListView,CreateView
 from .forms import parameterform,NameForm,EvaluationForm,parameterEnform,LoginForm
@@ -173,6 +174,7 @@ def TSPPathShow(request,pk):
         pt = path.split(',')
         obj.now_spot=int(pt[0])
         obj.next_spot=int(pt[1])
+        obj.calculate_count=1
         obj.save()
         
         graph = All_Plot_graph(pt)
@@ -184,7 +186,23 @@ def TSPNextPath(request,pk):
     obj=UserPath.objects.get(pk=pk)
     obj.last_page=request.build_absolute_uri()
     obj.save()
-    return render(request,"QAmuseum/TSPNextPath.html",{'pk':pk})
+    object = {
+        "path":obj.path,
+        "nowspot":obj.now_spot+1,
+        "nextspot":obj.next_spot,
+        "pk":obj.pk
+    }
+    nows=OmuraMuseum.objects.get(id=obj.now_spot+1)
+    nexts=OmuraMuseum.objects.get(id=obj.next_spot+1)
+    spot={"nospot_name":nows.name,
+          "nextspot_name":nexts.name,
+          "nextimg":nexts.image,
+          }
+    object.update(spot)
+    pt=obj.path.split(',')
+    graph = Plot_graph(obj.now_spot,obj.next_spot,pt)
+    object['graph']=graph
+    return render(request,"QAmuseum/TSPNextPath.html",object)
     
 def TSPSpot(request,pk):
     obj=UserPath.objects.get(pk=pk)
@@ -337,7 +355,7 @@ def AllMuseum(request,pk):
     task = AsyncResult(obj.caluculate_back)
     if task.ready():
         path = task.get()
-        goaltime=30
+        
         pd = str(path)
         pa= pd.replace(']','')
         path= pa.replace('[','')
@@ -345,6 +363,7 @@ def AllMuseum(request,pk):
         obj.path=path
         print(path)
         pt = obj.path.split(',')
+        goaltime=GoalTime(pt,0,obj.speed,obj.browse)
         obj.now_spot=0
         obj.next_spot=int(pt[1])
         visit_path=[0]
@@ -355,6 +374,7 @@ def AllMuseum(request,pk):
         obj.count=0
         obj.goal_time=goaltime
         obj.calc_bool=False
+        obj.calculate_count=1
         obj.save()
         userpath = UserPath.objects.filter(pk=pk)
         for userpath in userpath:
@@ -397,6 +417,7 @@ def MuseumPath(request,pk):
                     pt=userpath.path.split(',')
                     userpath.next_spot = int(pt[1])
                     userpath.count=0
+                    userpath.calculate_count = userpath.calculate_count+1
                     userpath.count_time=userpath.count_time+time.time()-userpath.start_time
                     userpath.start_time=time.time()
                     userpath.calculate_count =userpath.calculate_count+1
@@ -422,6 +443,8 @@ def MuseumPath(request,pk):
     pt=userpath.path.split(',')
     graph = Plot_graph(userpath.now_spot,userpath.next_spot,pt)
     object['graph']=graph
+    
+    
     return render(request, "QAmuseum/MuseumPath.html",object)
     #return reverse("MuseumPath",kwargs={'pk':pk})
 
@@ -584,8 +607,14 @@ def NextPath(request):
     return render(request,"QAmuseum/NextPath.html")
 
 #終了画面
-def End(request):
-    return render(request,"QAmuseum/End.html")
+def End(request,pk):
+    obj = UserPath.objects.get(pk=pk)
+    ctx={
+        'pk':pk,
+        'name':obj.name,
+        'count':obj.calculate_count
+    }
+    return render(request,"QAmuseum/End.html",ctx)
 
 def ReCalculate(request,pk):
     return render(request,"QAmuseum/ReCalculate.html",{"pk":pk})
@@ -954,7 +983,7 @@ def back_calc(T,speed_move,speed_watch,visit_spot,now_spot):
 @shared_task
 def allview_calc():
     time.sleep(1)
-    path=TSPCalc()
+    path=TSPCalculate()
     pd=str(path)
     pa = pd.replace(']','')
     path = pa.replace('[','')
@@ -963,7 +992,7 @@ def allview_calc():
 @shared_task
 def test_calc():
     time.sleep(1)
-    path=[0,1,2,3,0]
+    path=[0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,0]
     pd=str(path)
     pa = pd.replace(']','')
     path = pa.replace('[','')
