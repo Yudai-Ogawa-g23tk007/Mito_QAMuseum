@@ -40,4 +40,6 @@ urlpatterns=[
     path("TSPSpotEn/<int:pk>",views.TSPSpotEn,name="TSPSpotEn"),
     path("EvaluationTSP/<int:pk>",views.EvaluationTSP,name="EvaluationTSP"),
     path("EvaluationTSPEn/<int:pk>",views.EvaluationTSPEn,name="EvaluationTSPEn"),
+    path("TSPNextPath/<int:pk>",views.TSPNextPath,name="TSPNextPath"),
+    
 ]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
