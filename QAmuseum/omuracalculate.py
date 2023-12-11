@@ -223,7 +223,7 @@ def calculatepath(T,tt,br):
         print("re_opt:",re_opt)
     print(T)
     print(path)
-    return path,math.floor(goal_time)
+    return path
 
 
 def recalculate(T,speed_move,speed_watch,visit_spot,now_spot):

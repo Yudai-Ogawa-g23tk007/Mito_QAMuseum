@@ -19,26 +19,26 @@
                 </div>
             </nav>
         </header>
-        <div class="container">
+        <br><br>
         <main>
-        <div style="position:relative;z-index: 990;">
+        <div class="container">
+        
         <div class="text-center">
         この経路で案内を<br>
         始めますか<br>
-    予測巡回時間 およそ{{goaltime}}分</div>
-        <div class="mx-auto btn-group">
-        <a href="{% url 'CalculatePath' pk  %}"class="btn btn-danger btn-block" role="button" style="width:10em;
-                height:5em;margin-top:1em;"><p class='bg'>計算画面へ戻る</p></a>
+        予測巡回時間 およそ{{goaltime}}分</div>
+        
+        <a href="{% url 'Parameter' pk  %}">設定画面へ戻る</a>
         <a href="{% url 'MuseumPath' pk  %}"class="btn btn-success btn-block" role="button" style="width:10em;
         height:4em;margin-top:1em;"><p class='bg'>案内を開始</p></a>
-        </div>
-        </div>
-        <div class="omura">
-        <div style="position:absolute;" ><img src="/media/map_all.png" width="100%"></div>
-        <div style="position:relative;" class="pl"><img src="data:image/png;base64,{{graph|safe}}" class="pll"></div>
-        </div>
+       
+        
+        <div class="image-container">
+        <img src="/media/map_all.png" width="720px">
+        <img src="data:image/png;base64,{{graph|safe}}" >
+        </div></div>
         </main>
-        </div>
+        
 
     </body>
 </html>

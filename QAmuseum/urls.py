@@ -12,6 +12,7 @@ urlpatterns=[
     path("CalculatePath/<int:pk>/",views.CalculatePath,name="CalculatePath"),
     path("ajax/<int:pk>",views.caluculate,name="calculate"),
     path("ReCalculate/<int:pk>",views.ReCalculate,name="ReCalculate"),
+    path("CalcPathWait/<int:pk>",views.CalcPathWait,name="CalcPathWait"),
     #path("ajax/recalc/<int:pk>",views.recalc,name="recalc"),
     path("AllMuseumPath/<int:pk>",views.AllMuseum,name="AllMuseumPath"),
     path("MuseumPath/<int:pk>",views.MuseumPath,name="MuseumPath"),

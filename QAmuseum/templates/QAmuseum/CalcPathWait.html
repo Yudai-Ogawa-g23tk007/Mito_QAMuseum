@@ -4,10 +4,16 @@
 
     {% block body %}
     <main>
-        計算中です．
-        <img src="/media_local/qamv.gif">
+        <div class="container">
+        
+        <img src="/media/qamv.gif" width="500px">
+        <p>計算中です．</p></div>
         <script>
-            
-        </script>
+        setTimeout(
+        function() {
+            window.location.href = "{% url 'AllMuseumPath' pk %}";
+        },5000);
+    </script>
+        
     </main>
     {% endblock %}

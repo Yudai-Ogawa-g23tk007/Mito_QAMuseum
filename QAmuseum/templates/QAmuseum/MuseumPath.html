@@ -18,7 +18,7 @@
                     <a class="navbar-brand" href="#">大村記念学術館経路最適化</a>
                 </div>
             </nav>
-        </header>
+        </header><br><br>
         <div class="container">
         <main>
         <div style="position:relative;z-index: 990;">
@@ -32,10 +32,10 @@
             <form action="{% url 'Arrive' pk%}",method='GET'>
             <button type="submit" name="arrive" class="btn btn-success btn-block"><p class='bg'>到着</p></button></div>
         </form></div>
-        </div>
-        <div class="omura">
-            <div style="position:absolute;" ><img src="/media/map_all.png" width="300px"></div>
-            <div style="position:relative;" class="pl"><img src="data:image/png;base64,{{graph|safe}}" class="pll"></div>
+        </div><br>
+        <div class="image-container">
+            <img src="/media/map_all.png" width="720px">
+            <img src="data:image/png;base64,{{graph|safe}}">
         </div>
         </main>
         </div>

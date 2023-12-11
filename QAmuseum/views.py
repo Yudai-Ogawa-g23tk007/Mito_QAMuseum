@@ -127,6 +127,22 @@ def PatameterSelectEn(request,pk):
             return HttpResponseRedirect()
     return render(request,"QAmuseum/ParamSelect_En.html",{'pk':pk})
 
+def CalcPathWait(request,pk):
+    
+    obj  = UserPath.objects.get(pk=pk)
+    task = CalcPath.delay(obj.time,obj.speed,obj.browse)
+    obj.caluculate_back = task
+    obj.save()
+    return redirect('AllMuseumPath',pk)
+
+def CalcPathWait_En(request,pk):
+    
+    obj = obj  = UserPath.objects.get(pk=pk)
+    task = CalcPath.delay(obj.time,obj.speed,obj.browse)
+    obj.caluculate_back = task
+    obj.save()
+    return redirect('AllMuseumPath',pk)
+
 def TSPCalc(request,pk):
     
     #path = allview_calc()
@@ -135,7 +151,15 @@ def TSPCalc(request,pk):
     obj.caluculate_back = task
     obj.save()
     return redirect('TSPPathShow',pk)
+
+def TSPCalc_En(request,pk):
     
+    #path = allview_calc()
+    task = test_calc.delay()
+    obj  = UserPath.objects.get(pk=pk)
+    obj.caluculate_back = task
+    obj.save()
+    return redirect('TSPPathShow',pk)
 
     
 def TSPPathShow(request,pk):
@@ -211,7 +235,8 @@ def Parameter(request,pk):
             object=UserPath.objects.get(pk=pk)
             #return render(request,"QAmuseum/CalculatePath.html/",{"pk":pk,"user_path":object})
             #return reverse("MuseumPath",kwargs={"pk":pk,"user_path":object})
-            return render(request,"QAmuseum/CalculatePath.html/",{'object':object,'pk':pk})
+            #return render(request,"QAmuseum/CalculatePath.html/",{'object':object,'pk':pk})
+            return HttpResponseRedirect(reverse('CalcPathWait',args=[pk]))
     return render(request, "QAmuseum/Parameter.html",ctx)
 
 def Parameter_En(request,pk):
@@ -245,7 +270,8 @@ def Parameter_En(request,pk):
             object=UserPath.objects.get(pk=pk)
             #return render(request,"QAmuseum/CalculatePath.html/",{"pk":pk,"user_path":object})
             #return reverse("MuseumPath",kwargs={"pk":pk,"user_path":object})
-            return render(request,"QAmuseum/CalculatePath.html/",{'object':object,'pk':pk})
+            #return render(request,"QAmuseum/CalculatePath.html/",{'object':object,'pk':pk})
+            return HttpResponseRedirect(reverse('CalcPathWait',args=[pk]))
     return render(request, "QAmuseum/Parameter_En.html",ctx)
 
 
@@ -308,20 +334,42 @@ def AllMuseum(request,pk):
     obj=UserPath.objects.get(pk=pk)
     obj.last_page=request.build_absolute_uri()
     obj.save()
-    userpath = UserPath.objects.filter(pk=pk)
-    for userpath in userpath:
-        object = {
-            "path":userpath.path,
-            "nowspot":userpath.now_spot+1,
-            "nextspot":userpath.next_spot+1,
-            "goaltime":userpath.goal_time,
-            "pk":userpath.pk
-            }
-    pt=userpath.path.split(',')
-    graph = All_Plot_graph(pt)
-    object['graph']=graph
-    return render(request,"QAmuseum/AllMuseumPath.html",object)
+    task = AsyncResult(obj.caluculate_back)
+    if task.ready():
+        path = task.get()
+        goaltime=30
+        pd = str(path)
+        pa= pd.replace(']','')
+        path= pa.replace('[','')
 
+        obj.path=path
+        print(path)
+        pt = obj.path.split(',')
+        obj.now_spot=0
+        obj.next_spot=int(pt[1])
+        visit_path=[0]
+        pd=str(visit_path)
+        pa = pd.replace(']','')
+        visit_path = pa.replace('[','')
+        obj.visit_path=visit_path
+        obj.count=0
+        obj.goal_time=goaltime
+        obj.calc_bool=False
+        obj.save()
+        userpath = UserPath.objects.filter(pk=pk)
+        for userpath in userpath:
+            object = {
+                "path":userpath.path,
+                "nowspot":userpath.now_spot+1,
+                "nextspot":userpath.next_spot+1,
+                "goaltime":userpath.goal_time,
+                "pk":userpath.pk
+                }
+        pt=userpath.path.split(',')
+        graph = All_Plot_graph(pt)
+        object['graph']=graph
+        return render(request,"QAmuseum/AllMuseumPath.html",object)
+    return render(request,"QAmuseum/CalcPathWait.html",{'pk':pk})
 #経路表示画面
 def MuseumPath(request,pk):
     if "reset" in request.GET:
@@ -645,6 +693,7 @@ def Plot_graph(now_spot,next_spot,path):
     plt.gca().spines['bottom'].set_visible(False)
     plt.gca().spines['left'].set_visible(False)
     plt.tick_params(labelbottom=False, labelleft=False, labelright=False, labeltop=False, bottom=False, left=False, right=False, top=False)
+    plt.subplots_adjust(left=0, right=1, top=1, bottom=0)
     graph = Output_graph()
     return graph
 
@@ -918,6 +967,18 @@ def test_calc():
     pd=str(path)
     pa = pd.replace(']','')
     path = pa.replace('[','')
+    return path
+
+@shared_task
+def CalcPath(T,speed,browse):
+    path=[]
+    while path==[]:
+        path = calculatepath(T,speed,browse)
+        pd=str(path)
+        pa = pd.replace(']','')
+        path = pa.replace('[','')
+
+
     return path
 
 """mid_time=time.time()
