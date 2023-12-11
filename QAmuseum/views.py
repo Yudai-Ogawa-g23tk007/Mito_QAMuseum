@@ -179,7 +179,7 @@ def TSPPathShow(request,pk):
         obj.next_spot=int(pt[1])
         obj.calculate_count=1
         goaltime=GoalTime(pt,obj.speed,obj.browse)
-        obj.goal_time=goaltime
+        obj.goal_time=int(goaltime)
         obj.save()
         
         graph = All_Plot_graph(pt)
@@ -200,7 +200,7 @@ def TSPPathShowEn(request,pk):
         obj.next_spot=int(pt[1])
         obj.calculate_count=1
         goaltime=GoalTime(pt,obj.speed,obj.browse)
-        obj.goal_time=goaltime
+        obj.goal_time=int(goaltime)
         obj.save()
         
         graph = All_Plot_graph(pt)
