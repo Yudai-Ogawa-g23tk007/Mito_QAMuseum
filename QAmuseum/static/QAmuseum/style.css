@@ -193,3 +193,11 @@ input[type="radio"] {
     display: none;
     cursor: zoom-in;
 }
+
+.bordered {
+    padding: 10px; 
+    margin-bottom: 10px; 
+    border: 1px solid #333333; 
+    background: white;
+    border-radius: 10px;
+  }

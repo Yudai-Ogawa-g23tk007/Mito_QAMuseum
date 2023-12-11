@@ -27,12 +27,16 @@ urlpatterns=[
     path("End/<int:pk>",views.End,name="End"),
     path("End_En/<int:pk>",views.EndEn,name="EndEn"),
     path("login",views.Login,name="login"),
-    path("login_en",views.Login_En,name="login_en"),
+    path("login_en",views.Login_En,name="loginEn"),
     path("Agree",views.Agree,name="Agree"),
     path("Terms",views.AgreeEn,name="AgreeEn"),
     path("ParameterSelect/<int:pk>/",views.ParameterSelect,name="ParameterSelect"),
+    path("ParameterSelectEn/<int:pk>/",views.ParameterSelectEn,name="ParameterSelectEn"),
     path("TSPCalc/<int:pk>",views.TSPCalc,name="TSPCalc"),
+    path("TSPCalcEn/<int:pk>",views.TSPCalcEn,name="TSPCalcEn"),
     path("TSPPathShow/<int:pk>",views.TSPPathShow,name="TSPPathShow"),
+    path("TSPPathShowEn/<int:pk>",views.TSPPathShowEn,name="TSPPathShowEn"),
     path("TSPSpot/<int:pk>",views.TSPSpot,name="TSPSpot"),
+    path("TSPSpotEn/<int:pk>",views.TSPSpotEn,name="TSPSpotEn"),
 
 ]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

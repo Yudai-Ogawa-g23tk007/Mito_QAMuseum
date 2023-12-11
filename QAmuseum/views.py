@@ -119,7 +119,7 @@ def ParameterSelect(request,pk):
             return HttpResponseRedirect(reverse('Parameter',args=[pk]))
     return render(request,"QAmuseum/ParamSelect.html",{'pk':pk})
 
-def PatameterSelectEn(request,pk):
+def ParameterSelectEn(request,pk):
     obj=UserPath.objects.get(pk=pk)
     obj.last_page=request.build_absolute_uri()
     obj.save()
@@ -156,14 +156,14 @@ def TSPCalc(request,pk):
     obj.save()
     return redirect('TSPPathShow',pk)
 
-def TSPCalc_En(request,pk):
+def TSPCalcEn(request,pk):
     
     #path = allview_calc()
     task = test_calc.delay()
     obj  = UserPath.objects.get(pk=pk)
     obj.caluculate_back = task
     obj.save()
-    return redirect('TSPPathShow',pk)
+    return redirect('TSPPathShowEn',pk)
 
     
 def TSPPathShow(request,pk):
@@ -184,6 +184,25 @@ def TSPPathShow(request,pk):
         ctx={'pk':pk,'path':path,"graph":graph}
         return render(request,"QAmuseum/TSPPathShow.html",ctx)
     return render(request,"QAmuseum/TSPCalc.html",{'pk':pk})
+
+def TSPPathShowEn(request,pk):
+    obj=UserPath.objects.get(pk=pk)
+    obj.last_page=request.build_absolute_uri()
+    obj.save()
+    task = AsyncResult(obj.caluculate_back)
+    if task.ready():
+        path = task.get()
+        obj.path=path
+        pt = path.split(',')
+        obj.now_spot=int(pt[0])
+        obj.next_spot=int(pt[1])
+        obj.calculate_count=1
+        obj.save()
+        
+        graph = All_Plot_graph(pt)
+        ctx={'pk':pk,'path':path,"graph":graph}
+        return render(request,"QAmuseum/TSPPathShow_En.html",ctx)
+    return render(request,"QAmuseum/TSPCalc_En.html",{'pk':pk})
 
 def TSPNextPath(request,pk):
     obj=UserPath.objects.get(pk=pk)
@@ -206,7 +225,29 @@ def TSPNextPath(request,pk):
     graph = Plot_graph(obj.now_spot,obj.next_spot,pt)
     object['graph']=graph
     return render(request,"QAmuseum/TSPNextPath.html",object)
-    
+
+def TSPNextPathEn(request,pk):
+    obj=UserPath.objects.get(pk=pk)
+    obj.last_page=request.build_absolute_uri()
+    obj.save()
+    object = {
+        "path":obj.path,
+        "nowspot":obj.now_spot+1,
+        "nextspot":obj.next_spot,
+        "pk":obj.pk
+    }
+    nows=OmuraMuseum.objects.get(id=obj.now_spot+1)
+    nexts=OmuraMuseum.objects.get(id=obj.next_spot+1)
+    spot={"nospot_name":nows.name,
+          "nextspot_name":nexts.name,
+          "nextimg":nexts.image,
+          }
+    object.update(spot)
+    pt=obj.path.split(',')
+    graph = Plot_graph(obj.now_spot,obj.next_spot,pt)
+    object['graph']=graph
+    return render(request,"QAmuseum/TSPNextPath_En.html",object)
+
 def TSPSpot(request,pk):
     obj=UserPath.objects.get(pk=pk)
     obj.last_page=request.build_absolute_uri()
@@ -221,6 +262,21 @@ def TSPSpot(request,pk):
     form={"form":EvaluationForm(value)}
     object_spot.update(form)"""
     return render(request,"QAmuseum/TSPSpot.html",object_spot)
+
+def TSPSpotEn(request,pk):
+    obj=UserPath.objects.get(pk=pk)
+    obj.last_page=request.build_absolute_uri()
+    obj.save()
+    nsp = obj.now_spot
+    spot = OmuraMuseum.objects.get(id=nsp+1)
+    object_spot={'name':spot.name,'explain':spot.exp,
+                "img":spot.image,
+                "pk":obj.pk}
+    """
+    value={"display_evaluation":0}
+    form={"form":EvaluationForm(value)}
+    object_spot.update(form)"""
+    return render(request,"QAmuseum/TSPSpot_En.html",object_spot)
 
 
 

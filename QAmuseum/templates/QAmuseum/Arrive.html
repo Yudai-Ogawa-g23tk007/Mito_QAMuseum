@@ -4,8 +4,10 @@
     {% block body %}
         <main>
         <div class="container">
-        現在地点:{{name}}<br>
-        説明:{{explain}}<br>
+        現在地点:<br>
+        <div class="bordered"> {{name}}</div><br>
+        説明:<br>
+        <div class="bordered">{{explain}}</div><br>
         <img src="/media/{{img}}" width="720px"><br>
         <!--<div class="text-center">
         <a href="{% url 'MuseumPath' pk%}" class="btn btn-danger btn-block" role="button"><p class="bg">次へ進む</p></a></div>-->
