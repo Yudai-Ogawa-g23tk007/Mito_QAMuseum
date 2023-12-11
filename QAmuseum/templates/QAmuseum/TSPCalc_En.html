@@ -1,7 +1,14 @@
-<!--
-    {% extends "base_En.html" %}
+{% extends "base.html" %}
     {% block ul %}
     {% endblock %}
     {% block body %}
+    <div class = "container">
+    <img src="/media/qamv.gif" width="500px">
+    <p>calculate...</p></div>
+    <script>
+        setTimeout(
+        function() {
+            window.location.href = "{% url 'TSPPathShow' pk %}";
+        },2000);
+    </script>
     {% endblock %}
--->
