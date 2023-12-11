@@ -8,7 +8,7 @@
         {% bootstrap_javascript %}
         <link rel="stylesheet" type="text/css" href="{% static 'css/bootstrap.min.css' %}">
         <link rel="stylesheet"  href="{% static 'QAmuseum/style.css' %}">
-        
+        <link rel="stylesheet" href="{% static 'path/to/lightbox2/css/lightbox.min.css' %}">
         <title>SATOSHI OMURA MUSEUM</title>
     </head>
     <body>
@@ -21,9 +21,9 @@
         </header><br><br>
         <div class="container-fluid">
         <p class="spot">Now <br></p>
-        <p class="text-center">{{nowspot_name}}</p>
+        <p class="text-center name-explain">{{nowspot_name}}</p>
         <p class="spot">Next <br></p>
-        <p class="text-center">{{nextspot_name}}</p>
+        <p class="text-center name-explain">{{nextspot_name}}</p>
         <div class="text-center">
             <form action="{% url 'ArriveEn' pk%}",method='GET'>
             <button type="submit" name="arrive" class="btn btn-success btn-block">Arrive</button>
@@ -34,9 +34,33 @@
             <img src="data:image/png;base64,{{graph|safe}}">
         </div>
         <div class="text-center">
+            <a href="#" onclick="openModal()">Expansion</a></div>
+        <div class="text-center">
         <img src="/media/{{img}}" >
         </div></div>
-        
+        <div id="myModal" class="modal">
+            <span class="close" onclick="closeModal()">&times;</span>
+            <img src="/media/{{map_img}}" class="modal-content" alt="Large Image">
+            <img src="data:image/png;base64,{{graph|safe}}" class="modal-content-second" >
+        </div>
+        <script src="{% static 'path/to/lightbox2/js/lightbox.min.js' %}"></script>
+    <script>
+        function openModal() {
+        document.getElementById('myModal').style.display = 'block';
+        }
 
+        // モーダルを閉じる関数
+        function closeModal() {
+            document.getElementById('myModal').style.display = 'none';
+        }
+
+        // モーダル外をクリックしたら閉じる
+        window.onclick = function(event) {
+            var modal = document.getElementById('myModal');
+            if (event.target === modal) {
+                closeModal();
+            }
+        };
+    </script>
     </body>
 </html>

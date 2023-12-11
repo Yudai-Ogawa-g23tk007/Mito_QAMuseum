@@ -12,10 +12,17 @@
         <img src="/media/map_all.png">
         <img src="data:image/png;base64,{{graph|safe}}">
         
-        </div><div class="text-center"><br>
+        </div><div class="text-center">
+            <a href="#" onclick="openModal()">Expansion</a>
+            <br><br>
         <a href="{% url 'TSPCalcEn' pk %}">Recalculate</a><br>
         
         <button id="startnavi" class="btn btn-success btn-block">Next</button></div>
+        <div id="myModal" class="modal">
+            <span class="close" onclick="closeModal()">&times;</span>
+            <img src="/media/map_all.png" class="modal-content" alt="Large Image">
+            <img src="data:image/png;base64,{{graph|safe}}" class="modal-content-second" >
+        </div>
     </div>
     
     <script>
@@ -30,5 +37,22 @@
     var url = "{% url 'TSPSpotEn' pk %}";
     window.location.href = url;
   });
+  
+  function openModal() {
+        document.getElementById('myModal').style.display = 'block';
+        }
+
+        // モーダルを閉じる関数
+        function closeModal() {
+            document.getElementById('myModal').style.display = 'none';
+        }
+
+        // モーダル外をクリックしたら閉じる
+        window.onclick = function(event) {
+            var modal = document.getElementById('myModal');
+            if (event.target === modal) {
+                closeModal();
+            }
+        };
     </script>
     {% endblock %}

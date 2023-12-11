@@ -18,11 +18,35 @@
                 </form></div>
                 </div><br>
                 <div class="image-container">
-                    <img src="/media/{{map_img}}" >
+                    <img src="/media/{{mapimg}}" >
                     <img src="data:image/png;base64,{{graph|safe}}">
                 </div>
+                <div class="text-center">
+                    <a href="#" onclick="openModal()">Expansion</a></div>
                 <img src="/media/{{nextimg}}">
-        
+                <div id="myModal" class="modal">
+                    <span class="close" onclick="closeModal()">&times;</span>
+                    <img src="/media/{{mapimg}}" class="modal-content" alt="Large Image">
+                    <img src="data:image/png;base64,{{graph|safe}}" class="modal-content-second" >
+                </div>
         
     </div>
+    <script>
+        function openModal() {
+        document.getElementById('myModal').style.display = 'block';
+        }
+
+        // モーダルを閉じる関数
+        function closeModal() {
+            document.getElementById('myModal').style.display = 'none';
+        }
+
+        // モーダル外をクリックしたら閉じる
+        window.onclick = function(event) {
+            var modal = document.getElementById('myModal');
+            if (event.target === modal) {
+                closeModal();
+            }
+        };
+    </script>
     {% endblock %}

@@ -8,7 +8,7 @@
         {% bootstrap_css %}
         {% bootstrap_javascript %}
         <link rel="stylesheet" type="text/css" href="{% static 'QAmuseum/style.css' %}">
-    
+        <link rel="stylesheet" href="{% static 'path/to/lightbox2/css/lightbox.min.css' %}">
         <title>SATOSHI OMURA MUSEUM</title>
     </head>
     <body>
@@ -24,22 +24,48 @@
         <div class="container-fluid">
         
         <div class="text-center">
-            Estimated tour time: <br>
-            {{goaltime}} min.<br>
+            <p class="end-text">Estimated tour time: <br>
+            {{goaltime}} min.<br></p>
         
         <a href="{% url 'Parameter_En' pk  %}">Back to the setting</a><br>
         
         <div class="image-container">
-        <img src="/media/map_all.png" width="720px">
+        <img src="/media/map_all.png">
         <img src="data:image/png;base64,{{graph|safe}}" ></div>
-        </div><br>
+        </div>
+        <div class="text-center">
+            <a href="#" onclick="openModal()">Expansion</a></div>
+        <br>
         
         <div class="text-center">
         <a href="{% url 'CalcPathWaitEn' pk %}">Recalculate</a><br>
         <a href="{% url 'MuseumPathEn' pk  %}"class="btn btn-success btn-block" role="button" >Start guide</a>
         </div>
         </div>
-        
+        <div id="myModal" class="modal">
+            <span class="close" onclick="closeModal()">&times;</span>
+            <img src="/media/map_all.png" class="modal-content" alt="Large Image">
+            <img src="data:image/png;base64,{{graph|safe}}" class="modal-content-second" >
+        </div>
 
+        <script src="{% static 'path/to/lightbox2/js/lightbox.min.js' %}"></script>
+    <script>
+        function openModal() {
+        document.getElementById('myModal').style.display = 'block';
+        }
+
+        // モーダルを閉じる関数
+        function closeModal() {
+            document.getElementById('myModal').style.display = 'none';
+        }
+
+        // モーダル外をクリックしたら閉じる
+        window.onclick = function(event) {
+            var modal = document.getElementById('myModal');
+            if (event.target === modal) {
+                closeModal();
+            }
+        };
+    </script>
     </body>
 </html>

@@ -10,12 +10,21 @@
         <div class="image-container">
         <img src="/media/map_all.png">
         <img src="data:image/png;base64,{{graph|safe}}">
+        </div>
         
-        </div><div class="text-center"><br>
+        <div class="text-center">
+            <a href="#" onclick="openModal()">拡大</a><br><br>
         <a href="{% url 'TSPCalc' pk %}">再計算実行</a><br>
-        <button id="startnavi" class="btn btn-success btn-block">案内を開始する</button></div>
+        <button id="startnavi" class="btn btn-success btn-block">案内を開始する</button>
+        <br></div>
+        
+        
+        <div id="myModal" class="modal">
+            <span class="close" onclick="closeModal()">&times;</span>
+            <img src="/media/map_all.png" class="modal-content" alt="Large Image">
+            <img src="data:image/png;base64,{{graph|safe}}" class="modal-content-second" >
+        </div>
     </div>
-    
     <script>
         document.addEventListener('DOMContentLoaded', function () {
             var image = document.querySelector('.image-container img');
@@ -25,8 +34,26 @@
             });
         });
         document.getElementById('startnavi').addEventListener('click', function() {
-    var url = "{% url 'TSPSpot' pk %}";
-    window.location.href = url;
-  });
+            var url = "{% url 'TSPSpot' pk %}";
+            window.location.href = url;
+        });
+
+        function openModal() {
+        document.getElementById('myModal').style.display = 'block';
+        }
+
+        // モーダルを閉じる関数
+        function closeModal() {
+            document.getElementById('myModal').style.display = 'none';
+        }
+
+        // モーダル外をクリックしたら閉じる
+        window.onclick = function(event) {
+            var modal = document.getElementById('myModal');
+            if (event.target === modal) {
+                closeModal();
+            }
+        };
+        
     </script>
     {% endblock %}

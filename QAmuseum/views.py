@@ -20,6 +20,8 @@ from celery.result import AsyncResult
 from django_celery_results.models import TaskResult
 from django import forms
 from django.urls import reverse
+from django.conf import settings
+import os
 # Create your views here.
 
 #スタート画面
@@ -136,15 +138,18 @@ def ParameterSelectEn(request,pk):
 def CalcPathWait(request,pk):
     
     obj  = UserPath.objects.get(pk=pk)
-    task = CalcPath.delay(obj.time,obj.speed,obj.browse)
+    mustvisit=obj.must_spot.split(',')
+    print(mustvisit)
+    task = CalcPath.delay(obj.time,obj.speed,obj.browse,mustvisit)
     obj.caluculate_back = task
     obj.save()
     return redirect('AllMuseumPath',pk)
 
 def CalcPathWaitEn(request,pk):
     
-    obj = obj  = UserPath.objects.get(pk=pk)
-    task = CalcPath.delay(obj.time,obj.speed,obj.browse)
+    obj  = UserPath.objects.get(pk=pk)
+    mustvisit=obj.must_spot.split(',')
+    task = CalcPath.delay(obj.time,obj.speed,obj.browse,mustvisit)
     obj.caluculate_back = task
     obj.save()
     return redirect('AllMuseumPathEn',pk)
@@ -186,6 +191,7 @@ def TSPPathShow(request,pk):
         obj.save()
         
         graph = All_Plot_graph(pt)
+        
         ctx={'pk':pk,'path':path,"graph":graph,"goaltime":obj.goal_time}
         return render(request,"QAmuseum/TSPPathShow.html",ctx)
     return render(request,"QAmuseum/TSPCalc.html",{'pk':pk})
@@ -207,7 +213,7 @@ def TSPPathShowEn(request,pk):
         obj.count=0
         obj.save()
         
-        graph = All_Plot_graph(pt)
+        graph,file_path = All_Plot_graph(pt)
         ctx={'pk':pk,'path':path,"graph":graph,"goaltime":obj.goal_time}
         return render(request,"QAmuseum/TSPPathShow_En.html",ctx)
     return render(request,"QAmuseum/TSPCalc_En.html",{'pk':pk})
@@ -313,7 +319,7 @@ def Parameter(request,pk):
             time = form.cleaned_data["time"]
             speed = form.cleaned_data["speed"]
             browse=form.cleaned_data["browse"]
-            demand=[]
+            demand=[0]
             demand.append(int(form.cleaned_data["demand"]))
             for form.field_name in dynamic_demand_fields:
                 demand.append(int(form.cleaned_data[field_name]))
@@ -325,8 +331,9 @@ def Parameter(request,pk):
             obj.calc_bool=False
             
             print(demand)
-            
-            obj.must_spot=str(demand)
+            de=str(demand)
+            dem=de.replace(']','')
+            obj.must_spot=dem.replace('[','')
             obj.save()
             return redirect('CalcPathWait',pk)
         
@@ -363,7 +370,9 @@ def Parameter_En(request,pk):
             obj.browse=browse
             obj.count_time=0
             obj.calc_bool=False
-            obj.must_spot=str(demand)
+            de=str(demand)
+            dem=de.replace(']','')
+            obj.must_spot=dem.replace('[','')
             obj.save()
             user_path=UserPath.objects.filter(pk=pk)
             for user_path in user_path:
@@ -981,8 +990,6 @@ def predict(path,now_spot,tm,ts):
             if int(now_spot)==int(path[i+1]):
                 return predict_time
             
-            
-            
     return predict_time
 
 
@@ -1019,7 +1026,7 @@ def All_Plot_graph(path):
     plt.gca().spines['left'].set_visible(False)
     plt.tick_params(labelbottom=False, labelleft=False, labelright=False, labeltop=False, bottom=False, left=False, right=False, top=False)
     plt.subplots_adjust(left=0, right=1, top=1, bottom=0)
-    graph = Output_graph()
+    graph= Output_graph()
     return graph
 
 def Plot_graph(now_spot,next_spot,path):
@@ -1055,7 +1062,7 @@ def Plot_graph(now_spot,next_spot,path):
     plt.gca().spines['left'].set_visible(False)
     plt.tick_params(labelbottom=False, labelleft=False, labelright=False, labeltop=False, bottom=False, left=False, right=False, top=False)
     plt.subplots_adjust(left=0, right=1, top=1, bottom=0)
-    graph = Output_graph()
+    graph= Output_graph()
     return graph
 
 def Waypoint(now_spot,next_spot):
@@ -1331,10 +1338,14 @@ def test_calc():
     return path
 
 @shared_task
-def CalcPath(T,speed,browse):
+def CalcPath(T,speed,browse,must_visit=None):
     path=[]
+    print(must_visit)
+    must_spot=[]
+    for i in range(len(must_visit)):
+        must_spot.append(int(must_visit[i]))
     while path==[]:
-        path = calculatepath(T,speed,browse)
+        path = calculatepath(T,speed,browse,must_spot)
         pd = str(path)
         pa= pd.replace(']','')
         path= pa.replace('[','')
