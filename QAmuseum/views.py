@@ -8,7 +8,7 @@ from .omuracalculate import calculatepath,time_for_move_calc,time_stay,recalcula
 from .omurapix import Next_img
 from QAmuseum.views_modules import module
 from django.views.generic import ListView,CreateView
-from .forms import parameterform,NameForm,EvaluationForm,parameterEnform,LoginForm
+from .forms import parameterform,NameForm,EvaluationForm,parameterEnform,LoginForm,EvaluationEnForm
 import matplotlib.pyplot as plt
 from io import BytesIO
 import base64
@@ -136,13 +136,13 @@ def CalcPathWait(request,pk):
     obj.save()
     return redirect('AllMuseumPath',pk)
 
-def CalcPathWait_En(request,pk):
+def CalcPathWaitEn(request,pk):
     
     obj = obj  = UserPath.objects.get(pk=pk)
     task = CalcPath.delay(obj.time,obj.speed,obj.browse)
     obj.caluculate_back = task
     obj.save()
-    return redirect('AllMuseumPath',pk)
+    return redirect('AllMuseumPathEn',pk)
 
 def TSPCalc(request,pk):
     
@@ -289,7 +289,7 @@ def Parameter_En(request,pk):
             #return render(request,"QAmuseum/CalculatePath.html/",{"pk":pk,"user_path":object})
             #return reverse("MuseumPath",kwargs={"pk":pk,"user_path":object})
             #return render(request,"QAmuseum/CalculatePath.html/",{'object':object,'pk':pk})
-            return HttpResponseRedirect(reverse('CalcPathWait',args=[pk]))
+            return HttpResponseRedirect(reverse('CalcPathWaitEn',args=[pk]))
     return render(request, "QAmuseum/Parameter_En.html",ctx)
 
 
@@ -390,6 +390,51 @@ def AllMuseum(request,pk):
         object['graph']=graph
         return render(request,"QAmuseum/AllMuseumPath.html",object)
     return render(request,"QAmuseum/CalcPathWait.html",{'pk':pk})
+
+def AllMuseumEn(request,pk):
+    obj=UserPath.objects.get(pk=pk)
+    obj.last_page=request.build_absolute_uri()
+    obj.save()
+    task = AsyncResult(obj.caluculate_back)
+    if task.ready():
+        path = task.get()
+        
+        pd = str(path)
+        pa= pd.replace(']','')
+        path= pa.replace('[','')
+
+        obj.path=path
+        print(path)
+        pt = path.split(',')
+        goaltime=GoalTime(pt,obj.speed,obj.browse)
+        obj.now_spot=0
+        obj.next_spot=int(pt[1])
+        visit_path=[0]
+        pd=str(visit_path)
+        pa = pd.replace(']','')
+        visit_path = pa.replace('[','')
+        obj.visit_path=visit_path
+        obj.count=0
+        obj.goal_time=goaltime
+        obj.calc_bool=False
+        obj.calculate_count=1
+        obj.save()
+        userpath = UserPath.objects.filter(pk=pk)
+        for userpath in userpath:
+            object = {
+                "path":userpath.path,
+                "nowspot":userpath.now_spot+1,
+                "nextspot":userpath.next_spot+1,
+                "goaltime":userpath.goal_time,
+                "pk":userpath.pk
+                }
+        pt=userpath.path.split(',')
+        graph = All_Plot_graph(pt)
+        object['graph']=graph
+        return render(request,"QAmuseum/AllMuseumPath_En.html",object)
+    return render(request,"QAmuseum/CalcPathWait_En.html",{'pk':pk})
+
+
 #経路表示画面
 def MuseumPath(request,pk):
     if "reset" in request.GET:
@@ -447,6 +492,61 @@ def MuseumPath(request,pk):
     
     return render(request, "QAmuseum/MuseumPath.html",object)
     #return reverse("MuseumPath",kwargs={'pk':pk})
+
+def MuseumPathEn(request,pk):
+    if "reset" in request.GET:
+            obj =UserPath.objects.get(pk=pk)
+            path = obj.path.split(',')
+            if obj.count > 0:
+                obj.count = obj.count-1
+                obj.now_spot=path[obj.count]
+                obj.next_spot=path[obj.count+1]
+                obj.save()
+    
+    userpath = UserPath.objects.filter(pk=pk)
+    for userpath in userpath:
+        if userpath.calc_bool==True:
+            back_task=AsyncResult(userpath.caluculate_back)
+            print(back_task.status)
+            if back_task.status=="STARTED":
+                back_task.revoke(terminate=True)
+            if back_task.status=="SUCCESS":
+                print(back_task.result)
+                if len(back_task.result) != 0:
+                    path=back_task.result
+                    print(type(path))
+                    userpath.path=path
+                    pt=userpath.path.split(',')
+                    userpath.next_spot = int(pt[1])
+                    userpath.count=0
+                    userpath.calculate_count = userpath.calculate_count+1
+                    userpath.count_time=userpath.count_time+time.time()-userpath.start_time
+                    userpath.start_time=time.time()
+                    userpath.calculate_count =userpath.calculate_count+1
+                    userpath.calc_bool=False
+                    userpath.save()
+        if userpath.now_spot==0:
+            start_time=time.time()
+            userpath.start_time=start_time
+            userpath.save()
+        object = {
+            "path":userpath.path,
+            "nowspot":userpath.now_spot+1,
+            "nextspot":userpath.next_spot+1,
+            "pk":userpath.pk
+            }
+    nowsp=userpath.now_spot+1
+    nextsp=userpath.next_spot+1
+    now_spot=OmuraMuseum.objects.get(id=nowsp)
+    next_spot=OmuraMuseum.objects.get(id=nextsp)
+    spot={"nowspot_name":now_spot.en_name,
+          "nextspot_name":next_spot.en_name}
+    object.update(spot)
+    pt=userpath.path.split(',')
+    graph = Plot_graph(userpath.now_spot,userpath.next_spot,pt)
+    object['graph']=graph
+    
+    return render(request, "QAmuseum/MuseumPath_En.html",object)
 
 def Evaluation(request,pk):
     if request.method=="POST":
@@ -600,7 +700,104 @@ def Arrive(request,pk):
     form={"form":EvaluationForm(value)}
     object_spot.update(form) 
     return render(request,"QAmuseum/Arrive.html",object_spot)
-            
+
+
+def ArriveEn(request,pk):
+    if request.method == 'GET':
+        if "arrive" in request.GET:
+            obj = UserPath.objects.get(pk=pk)
+            path=obj.path.split(',')
+            print(path)
+            count=obj.count
+            if not obj.next_spot==0:
+                temp_path=obj.visit_path.split(',')
+                visit_path=[]
+                for i in temp_path:
+                    visit_path.append(int(i))
+                visit_path.append(int(path[count+1]))
+                pd=str(visit_path)
+                pa = pd.replace(']','')
+                visit_path = pa.replace('[','')
+                obj.visit_path=visit_path
+                obj.count=count+1
+                obj.now_spot=path[obj.count]
+                obj.next_spot=path[obj.count+1]
+                obj.save()
+
+                userpath=UserPath.objects.get(pk=pk)
+                path = userpath.path.split(',')
+                mid_time=time.time()
+                userpath.now_time=mid_time
+                predict_time=predict(path,userpath.now_spot,userpath.speed,userpath.browse)
+                userpath.predict_time=predict_time
+                userpath.save()
+                if int(predict_time) != int(userpath.now_time-userpath.start_time)/60:
+    #if predict_time>0:
+                    print(predict_time*60)
+                    print(userpath.now_time-userpath.start_time)
+                    print("time over")
+                    T=userpath.time-(userpath.now_time-userpath.start_time)/60-userpath.count_time/60
+                    speed_move=userpath.speed
+                    speed_watch=userpath.browse
+                    temp_path=userpath.visit_path.split(',')
+                    visit_spot=[]
+                    for i in temp_path:
+                        visit_spot.append(int(i))
+                    now_spot=userpath.now_spot
+                    now_path=userpath.path
+                    pt=back_calc.delay(T,speed_move,speed_watch,visit_spot,now_spot)
+                    userpath.caluculate_back=pt.id
+                    userpath.calc_bool=True
+                    userpath.save()
+            else:
+                return redirect("End",pk)
+        if "reset" in request.GET:
+            obj =UserPath.objects.get(pk=pk)
+            path = obj.path.split(',')
+            if obj.count > 0:
+                obj.count = obj.count-1
+            else:
+                obj.count=0
+            obj.now_spot=path[obj.count]
+            obj.next_spot=path[obj.count+1]
+            obj.save()
+            userpath = UserPath.objects.filter(pk=pk)
+            for userpath in userpath:
+                object = {
+                    "path":userpath.path,
+                    "nowspot":userpath.now_spot+1,
+                    "nextspot":userpath.next_spot+1,
+                    "pk":userpath.pk
+                    }
+            nowsp=userpath.now_spot+1
+            nextsp=userpath.next_spot+1
+            now_spot=OmuraMuseum.objects.get(id=nowsp)
+            next_spot=OmuraMuseum.objects.get(id=nextsp)
+            spot={"nowspot_name":now_spot.en_name,
+                "nextspot_name":next_spot.en_name,
+                }
+            object.update(spot)
+            pt=userpath.path.split(',')
+            graph = Plot_graph(userpath.now_spot,userpath.next_spot,pt)
+            object['graph']=graph
+            return render(request, "QAmuseum/MuseumPathEn.html",{'object':object,'pk':pk})
+    
+    userpath=UserPath.objects.get(pk=pk)
+    path = userpath.path.split(',')
+
+
+    nsp = userpath.now_spot
+    spot = OmuraMuseum.objects.filter(id=nsp+1)
+    for spot in spot:
+        object_spot={"name":spot.en_name,
+                     "explain":spot.en_exp,
+                    "img":spot.image,
+                     "pk":userpath.pk}
+    value={"display_evaluation":0}
+    form={"form":EvaluationEnForm(value)}
+    object_spot.update(form) 
+    return render(request,"QAmuseum/ArriveEn.html",object_spot)
+
 
 #次の経路表示画面
 def NextPath(request):
@@ -615,6 +812,15 @@ def End(request,pk):
         'count':obj.calculate_count
     }
     return render(request,"QAmuseum/End.html",ctx)
+
+def EndEn(request,pk):
+    obj = UserPath.objects.get(pk=pk)
+    ctx={
+        'pk':pk,
+        'name':obj.name,
+        'count':obj.calculate_count
+    }
+    return render(request,"QAmuseum/End_En.html",ctx)
 
 def ReCalculate(request,pk):
     return render(request,"QAmuseum/ReCalculate.html",{"pk":pk})

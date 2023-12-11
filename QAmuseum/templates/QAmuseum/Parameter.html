@@ -31,10 +31,6 @@
                     {{ field.label_tag}}<br></div>
                     <div class="form-center">
                     {{field | add_class:"form-param"}}</div>
-                    {% if field.field.widget.attrs.label_type == 'check' %} 
-                    <input type="checkbox" id="scales" name="scales" class="check" />
-                    <label for="scales" class="check-text">すべての展示を見る</label>
-                    {% endif %}
                     {% if field.field.widget.attrs.label_type == 'f' %}                   
                     <button name="add" type="submit" class="btn btn-block btn-add">+見たい展示を追加する</button>
                     {% endif %}<br>

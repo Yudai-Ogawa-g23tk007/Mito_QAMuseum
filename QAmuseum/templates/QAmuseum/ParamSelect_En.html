@@ -1,7 +1,19 @@
-<!--
-    {% extends "base_En.html" %}
+{% extends "base_En.html" %}
     {% block ul %}
     {% endblock %}
     {% block body %}
+    <main>
+        Please select a patrol method<br>
+        <form method="POST" action="{% url 'ParameterSelect' pk=pk %}">{% csrf_token %}
+        <label><input type="radio" name="radio_option" value="option1" onclick="ChangeButton('計算開始')">View All</label><br>
+        <label><input type="radio" name="radio_option" value="option2" onclick="ChangeButton('次へ')">View recommended exhibits</label><br>
+        <input type="submit" value="Next" id="submitButton" class="btn btn-success">
+        </form>
+        
+    </main>
+    <script>
+        function ChangeButton(newtext){
+            document.getElementById("submitButton").value=newtext;
+        }
+    </script>
     {% endblock %}
--->
