@@ -11,7 +11,7 @@
         <div class="image-container">
         <img src="/media/map_all.png">
         <img src="data:image/png;base64,{{graph|safe}}">
-        
+        <br>
         </div><div class="text-center">
             <a href="#" onclick="openModal()">Expansion</a>
             <br><br>
@@ -37,7 +37,7 @@
     var url = "{% url 'TSPSpotEn' pk %}";
     window.location.href = url;
   });
-  
+
   function openModal() {
         document.getElementById('myModal').style.display = 'block';
         }

@@ -25,14 +25,14 @@ header{
 }
 main{
     max-width: 1000px;
-    width:90%;
+    width:95%;
     margin: 0 auto;
 }
 body{
     font-size: 300%;
     background-color: #f8eee7;
     max-width: 1000px;
-    width:90%;
+    width:95%;
     margin: 0 auto;
     margin-top: auto;
 }
@@ -235,7 +235,7 @@ input[type="radio"] {
     text-align: center;
 }
 .spot{
-    margin-left: 50px;
+    margin-left: 20px;
 }
 .end-bg{
     font-size: 100px;

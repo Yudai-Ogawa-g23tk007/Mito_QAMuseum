@@ -20,9 +20,9 @@
             </nav>
         </header><br><br>
         <div class="container-fluid">
-        <p class="spot">Now <br></p>
+        <p class="spot">Now: <br></p>
         <p class="text-center name-explain">{{nowspot_name}}</p>
-        <p class="spot">Next <br></p>
+        <p class="spot">Next: <br></p>
         <p class="text-center name-explain">{{nextspot_name}}</p>
         <div class="text-center">
             <form action="{% url 'ArriveEn' pk%}",method='GET'>
@@ -32,7 +32,7 @@
         <div class="image-container">
             <img src="/media/{{map_img}}">
             <img src="data:image/png;base64,{{graph|safe}}">
-        </div>
+        </div><br>
         <div class="text-center">
             <a href="#" onclick="openModal()">Expansion</a></div>
         <div class="text-center">

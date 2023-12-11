@@ -22,9 +22,9 @@
         <div class="container-fluid">
         
         
-        <p class="spot">現在地点  <br></p>
+        <p class="spot">現在地点:  <br></p>
         <p class="text-center name-explain">{{nowspot_name}}</p><br>
-        <p class="spot">次の地点 <br></p>
+        <p class="spot">次の地点: <br></p>
         <p class="text-center name-explain">{{nextspot_name}}</p>
         <div class="text-center">
             <form action="{% url 'Arrive' pk%}",method='GET'>
@@ -34,7 +34,7 @@
         <div class="image-container">
             <img src="/media/{{map_img}}">
             <img src="data:image/png;base64,{{graph|safe}}">
-        </div>
+        </div><br>
         <div class="text-center">
             <a href="#" onclick="openModal()">拡大</a></div>
         <div class="text-center">
