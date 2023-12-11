@@ -7,19 +7,27 @@
         </header>
         {% block body %}
         <main>
-            <br>
-        <div class="text-center">
-        <form method="POST">{% csrf_token %}
-            {{form.as_p}}
-            
-        </div>
-
+        <div class="container">
             <div class="text-center">
-            <button type="submit" class="btn btn-success btn-block">Next</button></div>
-        </form>
-        <br><br>
-        <a href = "{% url 'loginEn' %}">login</a>
-        <a href = "{% url 'AgreeEn' %}">Terms of Use</a></div>
+                <p class="name-title">Satoshi Omura Memorial Academic Museum <br>
+                    Recommended Route System</p></div>
+            <br>
+            <div class="text-center">
+            <form method="POST">{% csrf_token %}
+                    {{form.as_p}}
+                </div>
+
+                <div class="text-center">
+                    <button type="submit" class="btn btn-success btn-block">Next</button>
+                </div>
+            </form>
+            <br>
+            <div class="text-center"></div>
+            <a href = "{% url 'loginEn' %}">Login</a>
+            <a href = "{% url 'AgreeEn' %}">Terms of Use</a>
+        </div>
+        </div>
+    
         </main>
     
     {% endblock %}
