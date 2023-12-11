@@ -500,6 +500,9 @@ def AllMuseumEn(request,pk):
 
 #経路表示画面
 def MuseumPath(request,pk):
+    obj=UserPath.objects.get(pk=pk)
+    obj.last_page=request.build_absolute_uri()
+    obj.save()
     if "reset" in request.GET:
             obj =UserPath.objects.get(pk=pk)
             path = obj.path.split(',')
@@ -559,6 +562,9 @@ def MuseumPath(request,pk):
     #return reverse("MuseumPath",kwargs={'pk':pk})
 
 def MuseumPathEn(request,pk):
+    obj=UserPath.objects.get(pk=pk)
+    obj.last_page=request.build_absolute_uri()
+    obj.save()
     if "reset" in request.GET:
             obj =UserPath.objects.get(pk=pk)
             path = obj.path.split(',')
@@ -681,6 +687,9 @@ def EvaluationTSPEn(request,pk):
 
 
 def Arrive(request,pk):
+    obj=UserPath.objects.get(pk=pk)
+    obj.last_page=request.build_absolute_uri()
+    obj.save()
     if request.method == 'GET':
         if "arrive" in request.GET:
             obj = UserPath.objects.get(pk=pk)
@@ -803,6 +812,9 @@ def Arrive(request,pk):
 
 
 def ArriveEn(request,pk):
+    obj=UserPath.objects.get(pk=pk)
+    obj.last_page=request.build_absolute_uri()
+    obj.save()
     if request.method == 'GET':
         if "arrive" in request.GET:
             obj = UserPath.objects.get(pk=pk)
@@ -905,6 +917,9 @@ def NextPath(request):
 
 #終了画面
 def End(request,pk):
+    obj=UserPath.objects.get(pk=pk)
+    obj.last_page=request.build_absolute_uri()
+    obj.save()
     obj = UserPath.objects.get(pk=pk)
     ctx={
         'pk':pk,
@@ -914,6 +929,9 @@ def End(request,pk):
     return render(request,"QAmuseum/End.html",ctx)
 
 def EndEn(request,pk):
+    obj=UserPath.objects.get(pk=pk)
+    obj.last_page=request.build_absolute_uri()
+    obj.save()
     obj = UserPath.objects.get(pk=pk)
     ctx={
         'pk':pk,
