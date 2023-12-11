@@ -1,0 +1,45 @@
+{% load static %}
+{% load django_bootstrap5 %}
+{% load widget_tweaks %}
+<!DOCTYPE html>
+<html>
+    <head>
+        {% bootstrap_css %}
+        {% bootstrap_javascript %}
+        <link rel="stylesheet" type="text/css" href="{% static 'css/bootstrap.min.css' %}">
+        <link rel="stylesheet"  href="{% static 'QAmuseum/style.css' %}">
+        
+        <title>SATOSHI OMURA MUSEUM</title>
+    </head>
+    <body>
+        <header>
+            <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-indigo">
+                <div class="container-fluid">
+                    <a class="navbar-brand" href="#">SATOSHI OMURA MUSEUM</a>
+                </div>
+            </nav>
+        </header><br><br>
+        <div class="container">
+        <main>
+        <div style="position:relative;z-index: 990;">
+        Now {{nowspot}} {{nowspot_name}}<br>
+        Next {{nextspot}} {{nextspot_name}}
+        <div class="text-center">
+            
+        
+            <div class="mx-auto btn-group">
+            <!--<form action="{% url 'MuseumPath' pk%}",method='GET'><button type="submit" name="reset" class="btn btn-danger btn-block"><p class='bg'>戻る</p></button></form>-->
+            <form action="{% url 'Arrive' pk%}",method='GET'>
+            <button type="submit" name="arrive" class="btn btn-success btn-block"><p class='bg'>Arrive</p></button></div>
+        </form></div>
+        </div><br>
+        <div class="image-container">
+            <img src="/media/map_all.png" width="720px">
+            <img src="data:image/png;base64,{{graph|safe}}">
+        </div>
+        </main>
+        </div>
+        
+
+    </body>
+</html>

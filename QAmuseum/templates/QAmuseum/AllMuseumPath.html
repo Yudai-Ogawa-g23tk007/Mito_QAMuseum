@@ -9,7 +9,7 @@
         {% bootstrap_javascript %}
         <link rel="stylesheet" type="text/css" href="{% static 'QAmuseum/style.css' %}">
     
-        <title>経路表示</title>
+        <title>大村智記念学術館</title>
     </head>
     <body>
         <header>
@@ -27,8 +27,8 @@
         この経路で案内を<br>
         始めますか<br>
         予測巡回時間 およそ{{goaltime}}分</div>
-        <a href="{% url 'ParameterSelect' pk %}">巡回方法選択画面へ戻る</a>
-        <a href="{% url 'Parameter' pk  %}">設定画面へ戻る</a>
+        <a href="{% url 'ParameterSelect' pk %}">巡回方法選択画面へ戻る</a><br>
+        <a href="{% url 'Parameter' pk  %}">設定画面へ戻る</a><br>
         <a href="{% url 'CalcPathWait' pk %}">再計算する</a>
        
         

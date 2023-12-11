@@ -362,8 +362,8 @@ def AllMuseum(request,pk):
 
         obj.path=path
         print(path)
-        pt = obj.path.split(',')
-        goaltime=GoalTime(pt,0,obj.speed,obj.browse)
+        pt = path.split(',')
+        goaltime=GoalTime(pt,obj.speed,obj.browse)
         obj.now_spot=0
         obj.next_spot=int(pt[1])
         visit_path=[0]
@@ -553,7 +553,7 @@ def Arrive(request,pk):
                         userpath.count=0"""
             #userpath.save()
             else:
-                return render(request,"QAmuseum/End.html")
+                return redirect("End",pk)
         if "reset" in request.GET:
             obj =UserPath.objects.get(pk=pk)
             path = obj.path.split(',')
@@ -1003,10 +1003,9 @@ def CalcPath(T,speed,browse):
     path=[]
     while path==[]:
         path = calculatepath(T,speed,browse)
-        pd=str(path)
-        pa = pd.replace(']','')
-        path = pa.replace('[','')
-
+        pd = str(path)
+        pa= pd.replace(']','')
+        path= pa.replace('[','')
 
     return path
 

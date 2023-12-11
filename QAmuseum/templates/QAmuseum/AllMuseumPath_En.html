@@ -1,0 +1,45 @@
+{% load static %}
+{% load django_bootstrap5 %}
+{% load widget_tweaks %}
+<!DOCTYPE html>
+<html>
+    <head>
+        <link rel="stylesheet" href="{% static 'QAmuseum/style.css' %}">
+        {% bootstrap_css %}
+        {% bootstrap_javascript %}
+        <link rel="stylesheet" type="text/css" href="{% static 'QAmuseum/style.css' %}">
+    
+        <title>SATOSHI OMURA MUSEUM</title>
+    </head>
+    <body>
+        <header>
+            <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-indigo">
+                <div class="container-fluid">
+                    <a class="navbar-brand" href="#">SATOSHI OMURA MUSEUM</a>
+                </div>
+            </nav>
+        </header>
+        <br><br>
+        <main>
+        <div class="container">
+        
+        <div class="text-center">
+            Would you like to start guiding on this route?<br>
+            Estimated tour time: approx. {{goaltime}} min.<br></div>
+        <a href="{% url 'ParameterSelect' pk %}">Return to patrol method selection screen</a><br>
+        <a href="{% url 'Parameter' pk  %}">Back to the setting screen</a><br>
+        <a href="{% url 'CalcPathWait' pk %}">Recalculate</a>
+       
+        
+        <div class="image-container">
+        <img src="/media/map_all.png" width="720px">
+        <img src="data:image/png;base64,{{graph|safe}}" >
+        </div><br><br><br><br><br><br><br><br>
+    <a href="{% url 'MuseumPath' pk  %}"class="btn btn-success btn-block" role="button" style="width:10em;
+        height:3em;margin-top:1em;"><p class='bg'>Start guide</p></a>
+    </div>
+        </main>
+        
+
+    </body>
+</html>

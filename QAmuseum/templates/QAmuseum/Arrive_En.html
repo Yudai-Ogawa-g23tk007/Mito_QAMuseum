@@ -1,29 +1,12 @@
-{% load static %}
-{% load django_bootstrap5 %}
-{% load widget_tweaks %}
-<!DOCTYPE html>
-<html>
-    <head>
-        {% bootstrap_css %}
-        {% bootstrap_javascript %}
-        <link rel="stylesheet" type="text/css" href="{% static 'css/bootstrap.min.css' %}">
-        <link rel="stylesheet" type="text/css" href="{% static 'QAmuseum/style.css' %}">
-   
-        <title>現在地点</title>
-    </head>
-    <body>
-        <header>
-            <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
-                <div class="container-fluid">
-                    <a class="navbar-brand" href="#">大村記念学術館経路最適化</a>
-                </div>
-            </nav>
-        </header>
+{% extends "base_En.html" %}
+    {% block ul %}
+    {% endblock %}
+    {% block body %}
         <main>
         <div class="container">
-        現在地点:{{name}}<br>
-        説明:{{explain}}<br>
-        <img src="/media/{{img}}" width="300px"><br>
+        Now:{{name}}<br>
+        Explain:{{explain}}<br>
+        <img src="/media/{{img}}" width="720px"><br>
         <!--<div class="text-center">
         <a href="{% url 'MuseumPath' pk%}" class="btn btn-danger btn-block" role="button"><p class="bg">次へ進む</p></a></div>-->
         <div class="text-center">
@@ -31,9 +14,8 @@
             {% csrf_token %}
             {{form.display_evaluation.label}}<br>
             {{form.display_evaluation}}<br>
-            <button type="submit" name="button" class="btn btn-success"><p class="bg">次へ進む</p></button>
+            <button type="submit" name="button" class="btn btn-success"><p class="bg">Next</p></button>
 
         </form></div></div>
         </main>
-    </body>
-</html>
+        {% endblock %}
