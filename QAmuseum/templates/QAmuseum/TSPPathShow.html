@@ -4,6 +4,10 @@
     {% block body %}
     <main>
         <div class="container">
+            <div class="text-center">
+                この経路で案内を<br>
+                始めますか<br>
+                予測巡回時間 およそ{{goaltime}}分</div>
         <div class="image-container">
         <img src="/media/map_all.png" width="720px">
         <img src="data:image/png;base64,{{graph|safe}}">

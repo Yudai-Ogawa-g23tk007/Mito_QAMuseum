@@ -1,7 +1,22 @@
-<!--
-    {% extends "base_En.html" %}
+{% extends "base_En.html" %}
     {% block ul %}
     {% endblock %}
     {% block body %}
+    <main>
+        <div class="container">
+        Now:<br>
+        <div class="bordered">{{name}}</div><br>
+        Explain:<br>
+        <div class="bordered">{{explain}}</div><br>
+        <img src="/media/{{img}}" width="300px"><br>
+        <div class="text-center">
+            <form action="{% url 'EvaluationTSPEn' pk%}" method="POST">
+                {% csrf_token %}
+                {{form.display_evaluation.label}}<br>
+                {{form.display_evaluation}}<br>
+                <button type="submit" name="button" class="btn btn-success"><p class="bg">Next</p></button>
+    
+            </form></div>
+        </div>
+    </main>
     {% endblock %}
--->

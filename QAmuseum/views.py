@@ -178,10 +178,12 @@ def TSPPathShow(request,pk):
         obj.now_spot=int(pt[0])
         obj.next_spot=int(pt[1])
         obj.calculate_count=1
+        goaltime=GoalTime(pt,obj.speed,obj.browse)
+        obj.goal_time=goaltime
         obj.save()
         
         graph = All_Plot_graph(pt)
-        ctx={'pk':pk,'path':path,"graph":graph}
+        ctx={'pk':pk,'path':path,"graph":graph,"goaltime":goaltime}
         return render(request,"QAmuseum/TSPPathShow.html",ctx)
     return render(request,"QAmuseum/TSPCalc.html",{'pk':pk})
 
@@ -197,10 +199,12 @@ def TSPPathShowEn(request,pk):
         obj.now_spot=int(pt[0])
         obj.next_spot=int(pt[1])
         obj.calculate_count=1
+        goaltime=GoalTime(pt,obj.speed,obj.browse)
+        obj.goal_time=goaltime
         obj.save()
         
         graph = All_Plot_graph(pt)
-        ctx={'pk':pk,'path':path,"graph":graph}
+        ctx={'pk':pk,'path':path,"graph":graph,"goaltime":goaltime}
         return render(request,"QAmuseum/TSPPathShow_En.html",ctx)
     return render(request,"QAmuseum/TSPCalc_En.html",{'pk':pk})
 
@@ -658,6 +662,23 @@ def EvaluationTSP(request,pk):
     else:
         form=EvaluationForm()
     return redirect("TSPNextPath",pk)
+
+def EvaluationTSPEn(request,pk):
+    if request.method=="POST":
+        form = EvaluationForm(request.POST)
+        if form.is_valid():
+            ev=form.cleaned_data["display_evaluation"]
+            if int(ev)==0:
+                print(ev)
+                return redirect("TSPSpot",pk)
+            else:
+                userpath=UserPath.objects.get(pk=pk)
+                spot=OmuraMuseum.objects.get(id=userpath.now_spot+1)
+                evaluation=MuseumEvaluation.objects.create(display_id=userpath.now_spot,display_name=spot.name,display_evaluation=ev,user_name=userpath.name,display_time=time.time()-userpath.now_time)
+    else:
+        form=EvaluationForm()
+    return redirect("TSPNextPathEn",pk)
+
 
 def Arrive(request,pk):
     if request.method == 'GET':
