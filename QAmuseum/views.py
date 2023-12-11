@@ -110,6 +110,7 @@ def Login_En(request):
 def ParameterSelect(request,pk):
     obj=UserPath.objects.get(pk=pk)
     obj.last_page=request.build_absolute_uri()
+    obj.calculate_count=0
     obj.save()
     if request.method == 'POST':
         select_option=request.POST.get('radio_option')
@@ -122,6 +123,7 @@ def ParameterSelect(request,pk):
 def ParameterSelectEn(request,pk):
     obj=UserPath.objects.get(pk=pk)
     obj.last_page=request.build_absolute_uri()
+    obj.calculate_count=0
     obj.save()
     if request.method == 'POST':
         select_option = request.POST.get('radio_option')
@@ -177,10 +179,10 @@ def TSPPathShow(request,pk):
         pt = path.split(',')
         obj.now_spot=int(pt[0])
         obj.next_spot=int(pt[1])
-        obj.calculate_count=1
+        obj.calculate_count+=1
         goaltime=GoalTime(pt,obj.speed,obj.browse)
         obj.goal_time=int(goaltime)
-        
+        obj.count=0
         obj.save()
         
         graph = All_Plot_graph(pt)
@@ -199,10 +201,10 @@ def TSPPathShowEn(request,pk):
         pt = path.split(',')
         obj.now_spot=int(pt[0])
         obj.next_spot=int(pt[1])
-        obj.calculate_count=1
+        obj.calculate_count+=1
         goaltime=GoalTime(pt,obj.speed,obj.browse)
         obj.goal_time=int(goaltime)
-        
+        obj.count=0
         obj.save()
         
         graph = All_Plot_graph(pt)
@@ -216,15 +218,16 @@ def TSPNextPath(request,pk):
     obj.save()
     object = {
         "path":obj.path,
-        "nowspot":obj.now_spot+1,
-        "nextspot":obj.next_spot+1,
+        "nowspot":obj.now_spot,
+        "nextspot":obj.next_spot,
         "pk":obj.pk
     }
-    nows=OmuraMuseum.objects.get(id=obj.now_spot+1)
-    nexts=OmuraMuseum.objects.get(id=obj.next_spot+1)
+    nows=OmuraMuseum.objects.get(id=obj.now_spot)
+    nexts=OmuraMuseum.objects.get(id=obj.next_spot)
+    nextmap=OmuraMuseum.objects.get(id=obj.next_spot+1)
     spot={"nowspot_name":nows.name,
           "nextspot_name":nexts.name,
-          "mapimg":nexts.map_image,
+          "mapimg":nextmap.map_image,
           "nextimg":nexts.image,
           }
     object.update(spot)
@@ -245,9 +248,11 @@ def TSPNextPathEn(request,pk):
     }
     nows=OmuraMuseum.objects.get(id=obj.now_spot+1)
     nexts=OmuraMuseum.objects.get(id=obj.next_spot+1)
+    nextmap=OmuraMuseum.objects.get(id=obj.next_spot+1)
     spot={"nospot_name":nows.name,
           "nextspot_name":nexts.name,
           "nextimg":nexts.image,
+          "mapimg":nextmap.map_image,
           }
     object.update(spot)
     pt=obj.path.split(',')
@@ -628,7 +633,7 @@ def Evaluation(request,pk):
             ev=form.cleaned_data["display_evaluation"]
             if int(ev)==0:
                 print(ev)
-                return redirect("Arrive",pk)
+                #return redirect("Arrive",pk)
             else:
                 userpath=UserPath.objects.get(pk=pk)
                 spot=OmuraMuseum.objects.get(id=userpath.now_spot+1)
@@ -644,7 +649,7 @@ def EvaluationEn(request,pk):
             ev=form.cleaned_data["display_evaluation"]
             if int(ev)==0:
                 print(ev)
-                return redirect("ArriveEn",pk)
+                #return redirect("ArriveEn",pk)
             else:
                 userpath=UserPath.objects.get(pk=pk)
                 spot=OmuraMuseum.objects.get(id=userpath.now_spot+1)
@@ -660,13 +665,17 @@ def EvaluationTSP(request,pk):
             ev=form.cleaned_data["display_evaluation"]
             if int(ev)==0:
                 print(ev)
-                return redirect("TSPSpot",pk)
+                #return redirect("TSPSpot",pk)
             else:
                 userpath=UserPath.objects.get(pk=pk)
                 spot=OmuraMuseum.objects.get(id=userpath.now_spot+1)
                 evaluation=MuseumEvaluation.objects.create(display_id=userpath.now_spot,display_name=spot.name,display_evaluation=ev,user_name=userpath.name,display_time=time.time()-userpath.now_time)
     else:
         form=EvaluationForm()
+    UpdateUserPath(pk)
+    obj=UserPath.objects.get(pk=pk)
+    if obj.next_spot == 0:
+        return redirect("End",pk)
     return redirect("TSPNextPath",pk)
 
 def EvaluationTSPEn(request,pk):
@@ -676,14 +685,37 @@ def EvaluationTSPEn(request,pk):
             ev=form.cleaned_data["display_evaluation"]
             if int(ev)==0:
                 print(ev)
-                return redirect("TSPSpot",pk)
+                #return redirect("TSPSpot",pk)
             else:
                 userpath=UserPath.objects.get(pk=pk)
                 spot=OmuraMuseum.objects.get(id=userpath.now_spot+1)
                 evaluation=MuseumEvaluation.objects.create(display_id=userpath.now_spot,display_name=spot.name,display_evaluation=ev,user_name=userpath.name,display_time=time.time()-userpath.now_time)
     else:
         form=EvaluationForm()
+    UpdateUserPath(pk)
+    obj=UserPath.objects.get(pk=pk)
+    if obj.next_spot == 0:
+        return redirect("EndEn",pk)
     return redirect("TSPNextPathEn",pk)
+
+def UpdateUserPath(pk):
+    obj=UserPath.objects.get(pk=pk)
+    path=obj.path.split(',')
+    count=obj.count
+    if not obj.next_spot==0:
+        temp_path=obj.visit_path.split(',')
+        visit_path=[]
+        for i in temp_path:
+            visit_path.append(int(i))
+        visit_path.append(int(path[count+1]))
+        pd=str(visit_path)
+        pa = pd.replace(']','')
+        visit_path = pa.replace('[','')
+        obj.visit_path=visit_path
+        obj.count = count+1
+        obj.now_spot=path[obj.count]
+        obj.next_spot=path[obj.count+1]
+        obj.save()
 
 
 def Arrive(request,pk):
@@ -970,7 +1002,7 @@ def All_Plot_graph(path):
     plt.figure(figsize=(9,7),dpi=100)
     plt.ylim(-720,0)
     plt.xlim(0,940)
-    plt.scatter(spot_x,spot_y,marker=".")
+    plt.scatter(spot_x,spot_y,marker="")
     for i in range(len(path)-1):
         plt.annotate("",xy=[spot_x[int(path[i+1])],spot_y[int(path[i+1])]],xytext=[spot_x[int(path[i])],spot_y[int(path[i])]],arrowprops=dict(shrink=0, width=1, headwidth=8, 
                                 headlength=10, connectionstyle='arc3',
@@ -997,7 +1029,7 @@ def Plot_graph(now_spot,next_spot,path):
     plt.figure(figsize=(9,7),dpi=100)
     plt.ylim(-720,0)
     plt.xlim(0,940)
-    plt.scatter(spot_x,spot_y,marker=".")
+    plt.scatter(spot_x,spot_y,marker="")
     
     """plt.annotate("",xy=[spot_x[next_spot],spot_y[next_spot]],xytext=[spot_x[now_spot],spot_y[now_spot]],arrowprops=dict(shrink=0, width=1, headwidth=8, 
                                 headlength=10, connectionstyle='arc3',
@@ -1200,9 +1232,9 @@ def graph_data():
        270,#21
        270,#22
        450,#23
-       530,#24
+       560,#24
        450,#25
-       530,#26
+       560,#26
        630,#27
        670,#28
        270,#29

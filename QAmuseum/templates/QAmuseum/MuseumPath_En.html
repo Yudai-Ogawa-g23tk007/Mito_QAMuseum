@@ -20,24 +20,22 @@
             </nav>
         </header><br><br>
         <div class="container-fluid">
-        <div style="position:relative;z-index: 990;">
         <p class="spot">Now <br></p>
         <p class="text-center">{{nowspot_name}}</p>
         <p class="spot">Next <br></p>
         <p class="text-center">{{nextspot_name}}</p>
         <div class="text-center">
-            <div class="mx-auto btn-group">
-            <!--<form action="{% url 'MuseumPath' pk%}",method='GET'><button type="submit" name="reset" class="btn btn-danger btn-block"><p class='bg'>戻る</p></button></form>-->
             <form action="{% url 'ArriveEn' pk%}",method='GET'>
-            <button type="submit" name="arrive" class="btn btn-success btn-block"><p class='bg'>Arrive</p></button></div>
-        </form></div>
+            <button type="submit" name="arrive" class="btn btn-success btn-block">Arrive</button>
+        </div>
+        </form>
         <div class="image-container">
-            <img src="/media/{{map_img}}" width="720px">
+            <img src="/media/{{map_img}}">
             <img src="data:image/png;base64,{{graph|safe}}">
         </div>
         <div class="text-center">
-        <img src="/media/{{img}}" width="720px">
-        </div></div></div>
+        <img src="/media/{{img}}" >
+        </div></div>
         
 
     </body>

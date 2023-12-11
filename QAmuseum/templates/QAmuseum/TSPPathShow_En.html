@@ -9,10 +9,10 @@
             <a href="{% url 'ParameterSelectEn' pk %}">Back to the setting</a><br>
             </div>
         <div class="image-container">
-        <img src="/media/map_all.png" width="720px">
+        <img src="/media/map_all.png">
         <img src="data:image/png;base64,{{graph|safe}}">
         
-        </div><div class="text-center">
+        </div><div class="text-center"><br>
         <a href="{% url 'TSPCalcEn' pk %}">Recalculate</a><br>
         
         <button id="startnavi" class="btn btn-success btn-block">Next</button></div>

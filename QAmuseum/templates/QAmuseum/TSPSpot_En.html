@@ -5,17 +5,17 @@
     
         <div class="container-fluid">
         <p class="spot">Now:<br></p>
-        <p class="text-center">{{name}}<br></p>
+        <p class="text-center name-explain">{{name}}<br></p>
         <p class="spot">Explain:<br></p>
-       <p class="text-center">{{explain}}<br></p>
+       <p class="text-center name-explain">{{explain}}<br></p>
        <div class="text-center">
-        <img src="/media/{{img}}" width="720px"><br><br>
+        <img src="/media/{{img}}"><br><br>
         
             <form action="{% url 'EvaluationTSPEn' pk%}" method="POST">
                 {% csrf_token %}
                 {{form.display_evaluation.label}}<br>
                 {{form.display_evaluation}}<br>
-                <button type="submit" name="button" class="btn btn-success"><p class="bg">Next</p></button>
+                <button type="submit" name="button" class="btn btn-success">Next</button>
     
             </form></div>
         </div>

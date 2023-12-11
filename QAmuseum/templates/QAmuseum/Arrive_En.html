@@ -4,19 +4,20 @@
     {% block body %}
         
         <div class="container-fluid">
-        Now:
-        <br>{{name}}<br>
-        Explain:<br>
-       {{explain}}<br>
-        <img src="/media/{{img}}" width="720px"><br>
-        <!--<div class="text-center">
-        <a href="{% url 'MuseumPath' pk%}" class="btn btn-danger btn-block" role="button"><p class="bg">次へ進む</p></a></div>-->
+        <p class="spot">Now:<br></p>
+        <p class="text-center name-explain">{{name}}<br></p>
         <div class="text-center">
+        <img src="/media/{{img}}"><br>
+        </div>
+        <p class="spot">Explain:<br</p>>
+        <p class="text-center name-explain">{{explain}}<br></p>
+        <br>
+        <div class="text-center name-explain">
         <form action="{% url 'EvaluationEn' pk%}" method="POST">
             {% csrf_token %}
             {{form.display_evaluation.label}}<br>
-            {{form.display_evaluation}}<br>
-            <button type="submit" name="button" class="btn btn-success"><p class="bg">Next</p></button>
+            {{form.display_evaluation}}<br><br>
+            <button type="submit" name="button" class="btn btn-success">Next</button>
 
         </form></div></div>
        

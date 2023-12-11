@@ -3,25 +3,24 @@
     {% endblock %}
     {% block body %}
     <div class="container-fluid">
-        
-            <div style="position:relative;z-index: 990;">
-                <p class="spot">現在地点 <br></p>
-                <p class="text-center">{{nowspot_name}}<br></p>
-                <p class="spot">次の地点 <br></p>
-                <p class="text-center">{{nextspot_name}}</p>
+        <p class="spot">現在地点 <br></p>
+        <p class="text-center name-explain">{{nowspot_name}}<br></p>
+        <p class="spot">次の地点 <br></p>
+        <p class="text-center name-explain">{{nextspot_name}}</p>
                 <div class="text-center">
                     <div class="mx-auto btn-group">
                     <!--<form action="{% url 'MuseumPath' pk%}",method='GET'><button type="submit" name="reset" class="btn btn-danger btn-block"><p class='bg'>戻る</p></button></form>-->
                     <form action="{% url 'TSPSpot' pk%}",method='GET'>
-                    <button type="submit" name="arrive" class="btn btn-success btn-block"><p class='bg'>到着</p></button></div>
-                </form></div>
-                </div><br>
+                    <button type="submit" name="arrive" class="btn btn-success btn-block"><p class='bg'>到着</p></button>
+                </div>
+                </form>
+                <br>
                 <div class="image-container">
-                    <img src="/media/{{mapimg}}" width="720px">
+                    <img src="/media/{{mapimg}}" >
                     <img src="data:image/png;base64,{{graph|safe}}">
                 </div>
-                <img src="/media/{{nextimg}}" wdith="720px">
+                
+                <img src="/media/{{nextimg}}" >
+            </div></div>
         
-        
-    </div>
     {% endblock %}
