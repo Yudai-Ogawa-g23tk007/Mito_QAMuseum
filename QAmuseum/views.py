@@ -213,7 +213,7 @@ def TSPPathShowEn(request,pk):
         obj.count=0
         obj.save()
         
-        graph,file_path = All_Plot_graph(pt)
+        graph = All_Plot_graph(pt)
         ctx={'pk':pk,'path':path,"graph":graph,"goaltime":obj.goal_time}
         return render(request,"QAmuseum/TSPPathShow_En.html",ctx)
     return render(request,"QAmuseum/TSPCalc_En.html",{'pk':pk})
@@ -238,7 +238,7 @@ def TSPNextPath(request,pk):
           }
     object.update(spot)
     pt=obj.path.split(',')
-    graph = Plot_graph(obj.now_spot,obj.next_spot,pt)
+    graph = Plot_graph(obj.now_spot-1,obj.next_spot-1,pt)
     object['graph']=graph
     return render(request,"QAmuseum/TSPNextPath.html",object)
 
@@ -248,8 +248,8 @@ def TSPNextPathEn(request,pk):
     obj.save()
     object = {
         "path":obj.path,
-        "nowspot":obj.now_spot+1,
-        "nextspot":obj.next_spot+1,
+        "nowspot":obj.now_spot,
+        "nextspot":obj.next_spot,
         "pk":obj.pk
     }
     nows=OmuraMuseum.objects.get(id=obj.now_spot+1)
@@ -262,7 +262,7 @@ def TSPNextPathEn(request,pk):
           }
     object.update(spot)
     pt=obj.path.split(',')
-    graph = Plot_graph(obj.now_spot,obj.next_spot,pt)
+    graph = Plot_graph(obj.now_spot-1,obj.next_spot-1,pt)
     object['graph']=graph
     return render(request,"QAmuseum/TSPNextPath_En.html",object)
 
