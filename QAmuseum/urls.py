@@ -50,4 +50,6 @@ urlpatterns=[
     path("BacktoTSPPath/<int:pk>",views.BacktoTSPPath,name="BacktoTSPPath"),
     path("BacktoTSPSpotEn/<int:pk>",views.BacktoTSPSpotEn,name="BacktoTSPSpotEn"),
     path("BacktoTSPPathEn/<int:pk>",views.BacktoTSPPathEn,name="BacktoTSPPathEn"),
+    path("Enter/<int:pk>",views.Enter,name="Enter"),
+    path("EnterEn/<int:pk>",views.EnterEn,name="EnterEN"),
 ]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

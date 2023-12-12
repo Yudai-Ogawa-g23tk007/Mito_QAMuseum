@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+    {% block ul %}
+    {% endblock %}
+    {% block body %}
+    
+        <div class="container-fluid">
+        <p class="spot">現在地点:<br></p>
+        <p class="text-center name-explain">{{name}}<br></p>
+        <div class="text-center">
+        <img src="/media/{{img}}"><br><br></div>
+        <p class="spot">説明:<br></p>
+        <p class="text-center name-explain">{{explain}}<br></p>
+        <div class="text-center">
+        <a href="{% url 'MuseumPath' pk  %}"class="btn btn-success btn-block" role="button">つぎへ</a>
+            </form></div>
+        </div>
+    
+    {% endblock %}

@@ -230,7 +230,7 @@ def TSPNextPath(request,pk):
     }
     nows=OmuraMuseum.objects.get(id=obj.now_spot)
     nexts=OmuraMuseum.objects.get(id=obj.next_spot)
-    nextmap=OmuraMuseum.objects.get(id=obj.next_spot+1)
+    nextmap=OmuraMuseum.objects.get(id=obj.next_spot)
     spot={"nowspot_name":nows.name,
           "nextspot_name":nexts.name,
           "mapimg":nextmap.map_image,
@@ -927,6 +927,22 @@ def ArriveEn(request,pk):
     object_spot.update(form) 
     return render(request,"QAmuseum/Arrive_En.html",object_spot)
 
+def Enter(request,pk):
+    enter = OmuraMuseum.objects.get(id=1)
+    object={'pk':pk,
+            "name":enter.name,
+            "explain":enter.exp,
+            "img":enter.image}
+    return render(request,"QAmuseum/Enter.html",object)
+
+def EnterEn(request,pk):
+    enter = OmuraMuseum.objects.get(id=1)
+    object={'pk':pk,
+            "name":enter.en_name,
+            "explain":enter.en_exp,
+            "img":enter.image}
+    return render(request,"QAmuseum/EnterEn.html",object)
+
 def BackSave(pk):
     obj= UserPath.objects.get(pk=pk)
     next=obj.now_spot
@@ -935,10 +951,10 @@ def BackSave(pk):
         now=0
     else:
         now=int(visit.pop())
-    obj.now_spot=now
-    obj.next_spot=next
-    obj.visit_path=visit
-    obj.save()
+        obj.now_spot=now
+        obj.next_spot=next
+        obj.visit_path=visit
+        obj.save()
 
 def BacktoArrive(request,pk):
     obj= UserPath.objects.get(pk=pk)
@@ -947,6 +963,7 @@ def BacktoArrive(request,pk):
     if len(visit)==0:
         now=0
     else:
+        next=int(visit.pop())
         now=int(visit.pop())
     obj.now_spot=now
     obj.next_spot=next
@@ -978,7 +995,7 @@ def BacktoTSPSpotEn(request,pk):
 
 def BacktoTSPPathEn(request,pk):
     BackSave(pk)
-    return rdirect("TSPPathEn",pk)
+    return redirect("TSPPathEn",pk)
 
 #次の経路表示画面
 def NextPath(request):

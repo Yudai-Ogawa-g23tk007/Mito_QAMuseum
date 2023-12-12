@@ -1,0 +1,19 @@
+{% extends "base_En.html" %}
+    {% block ul %}
+    {% endblock %}
+    {% block body %}
+    
+        <div class="container-fluid">
+        <p class="spot">Now:<br></p>
+        <p class="text-center name-explain">{{name}}<br></p>
+       <div class="text-center">
+        <img src="/media/{{img}}"><br><br></div>
+        <p class="spot">Explain:<br></p>
+       <p class="text-center name-explain">{{explain}}<br></p>
+       <div class="text-center">
+       <a href="{% url 'MuseumPath' pk  %}"class="btn btn-success btn-block" role="button">Next</a>
+    <br><br></div>
+            </form>
+        </div>
+    
+    {% endblock %}
