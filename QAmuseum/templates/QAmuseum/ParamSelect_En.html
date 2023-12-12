@@ -9,7 +9,7 @@
         <form method="POST" action="{% url 'ParameterSelectEn' pk=pk %}">{% csrf_token %}
         <label><input type="radio" name="radio_option" value="option1" onclick="ChangeButton('Start to calculate')">Viewing All Exhibition</label><br>
         <label><input type="radio" name="radio_option" value="option2" onclick="ChangeButton('Next')">Setting Time</label><br>
-        </div>
+        </div><br>
         <div class="text-center">
         <input type="submit" value="Next" id="submitButton" class="btn btn-success">
         </form></div>

@@ -879,7 +879,7 @@ def ArriveEn(request,pk):
                     userpath.calc_bool=True
                     userpath.save()
             else:
-                return redirect("End",pk)
+                return redirect("EndEn",pk)
         if "reset" in request.GET:
             obj =UserPath.objects.get(pk=pk)
             path = obj.path.split(',')
@@ -927,6 +927,53 @@ def ArriveEn(request,pk):
     object_spot.update(form) 
     return render(request,"QAmuseum/Arrive_En.html",object_spot)
 
+def BackSave(pk):
+    obj= UserPath.objects.get(pk=pk)
+    next=obj.now_spot
+    visit=obj.visit_path.split(',')
+    if len(visit)==0:
+        now=0
+    else:
+        now=int(visit.pop())
+    obj.now_spot=now
+    obj.next_spot=next
+    obj.visit_path=visit
+    obj.save()
+
+def BacktoArrive(request,pk):
+    obj= UserPath.objects.get(pk=pk)
+    next=obj.now_spot
+    visit=obj.visit_path.split(',')
+    if len(visit)==0:
+        now=0
+    else:
+        now=int(visit.pop())
+    obj.now_spot=now
+    obj.next_spot=next
+    obj.visit_path=visit
+    obj.save()
+    return redirect("Arrive",pk)
+
+def BacktoPath(request,pk):
+    BackSave(pk)
+    return redirect("MuseumPath",pk)
+def BacktoArriveEn(request,pk):
+    return render(request,"QAmuseum/Arrive_En.html")
+
+def BacktoPathEn(request,pk):
+    return render(request,"QAmuseum/MuseumPath_En.html")
+
+def BacktoTSPSpot(request,pk):
+    return render(request,"QAmuseum/TSPSpot.html")
+
+def BacktoTSPPath(request,pk):
+    return render(request,"QAmuseum/TSPNextPath.html")
+
+def BacktoTSPSpotEn(request,pk):
+    return render(request,"QAmuseum/TSPSpot_En.html")
+
+def BacktoTSPPathEn(request,pk):
+    return render(request,"QAmuseum/TSPNextPath_En.html")
 
 #次の経路表示画面
 def NextPath(request):
