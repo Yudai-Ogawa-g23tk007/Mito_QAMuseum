@@ -958,22 +958,27 @@ def BacktoPath(request,pk):
     BackSave(pk)
     return redirect("MuseumPath",pk)
 def BacktoArriveEn(request,pk):
-    return render(request,"QAmuseum/Arrive_En.html")
-
+    BackSave(pk)
+    return redirect("ArriveEn",pk)
 def BacktoPathEn(request,pk):
-    return render(request,"QAmuseum/MuseumPath_En.html")
+    BackSave(pk)
+    return redirect("MuseuumPathEn",pk)
 
 def BacktoTSPSpot(request,pk):
-    return render(request,"QAmuseum/TSPSpot.html")
+    BackSave(pk)
+    return redirect("TSPSpot",pk)
 
 def BacktoTSPPath(request,pk):
-    return render(request,"QAmuseum/TSPNextPath.html")
+    BackSave(pk)
+    return redirect("TSPPath",pk)
 
 def BacktoTSPSpotEn(request,pk):
-    return render(request,"QAmuseum/TSPSpot_En.html")
+    BackSave(pk)
+    return redirect("TSPSpotEn",pk)
 
 def BacktoTSPPathEn(request,pk):
-    return render(request,"QAmuseum/TSPNextPath_En.html")
+    BackSave(pk)
+    return rdirect("TSPPathEn",pk)
 
 #次の経路表示画面
 def NextPath(request):
