@@ -172,6 +172,9 @@ def TSPCalcEn(request,pk):
     obj.save()
     return redirect('TSPPathShowEn',pk)
 
+def Reload(request):
+    task = reload.delay()
+    return redirect('Reload')
     
 def TSPPathShow(request,pk):
     obj=UserPath.objects.get(pk=pk)
@@ -1424,6 +1427,12 @@ def CalcPath(T,speed,browse,must_visit=None):
         path= pa.replace('[','')
 
     return path
+
+@shared_task
+def reload():
+    time.sleep(1)
+    og=2*3
+    return og
 
 """mid_time=time.time()
     userpath.now_time=mid_time
