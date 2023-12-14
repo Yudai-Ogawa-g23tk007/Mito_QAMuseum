@@ -11,12 +11,12 @@
         <div class="image-container">
         <img src="/media/map_all.png">
         <img src="data:image/png;base64,{{graph|safe}}">
-        <br>
-        </div><div class="text-center">
-            <a href="#" onclick="openModal()">Expansion</a>
-            <br><br>
-        <a href="{% url 'TSPCalcEn' pk %}">Recalculate</a><br>
         
+        </div><br><div class="text-center">
+            <a href="#" onclick="openModal()">Expansion</a>
+            <br>
+        <a href="{% url 'TSPCalcEn' pk %}">Recalculate</a><br>
+        <br>
         <button id="startnavi" class="btn btn-success btn-block">Next</button></div>
         <div id="myModal" class="modal">
             <span class="close" onclick="closeModal()">&times;</span>

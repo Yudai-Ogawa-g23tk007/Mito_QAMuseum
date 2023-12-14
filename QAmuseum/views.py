@@ -252,11 +252,11 @@ def TSPNextPathEn(request,pk):
         "nextspot":obj.next_spot,
         "pk":obj.pk
     }
-    nows=OmuraMuseum.objects.get(id=obj.now_spot+1)
-    nexts=OmuraMuseum.objects.get(id=obj.next_spot+1)
-    nextmap=OmuraMuseum.objects.get(id=obj.next_spot+1)
-    spot={"nospot_name":nows.name,
-          "nextspot_name":nexts.name,
+    nows=OmuraMuseum.objects.get(id=obj.now_spot)
+    nexts=OmuraMuseum.objects.get(id=obj.next_spot)
+    nextmap=OmuraMuseum.objects.get(id=obj.next_spot)
+    spot={"nowspot_name":nows.en_name,
+          "nextspot_name":nexts.en_name,
           "nextimg":nexts.image,
           "mapimg":nextmap.map_image,
           }
@@ -286,7 +286,7 @@ def TSPSpotEn(request,pk):
     obj.save()
     nsp = obj.now_spot
     spot = OmuraMuseum.objects.get(id=nsp+1)
-    object_spot={'name':spot.name,'explain':spot.exp,
+    object_spot={'name':spot.en_name,'explain':spot.en_exp,
                 "img":spot.image,
                 "pk":obj.pk}
     value={"display_evaluation":0}
@@ -1400,7 +1400,11 @@ def allview_calc():
 @shared_task
 def test_calc():
     time.sleep(1)
-    path=[0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,0]
+    t= int(time.time())
+    if t%2==0:
+        path=[0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,0]
+    else:
+        path=[0,19,18,17,16,15,14,13,12,11,10,9,8,7,6,5,4,3,2,1,0]
     pd=str(path)
     pa = pd.replace(']','')
     path = pa.replace('[','')

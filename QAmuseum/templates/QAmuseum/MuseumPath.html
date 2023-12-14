@@ -18,8 +18,8 @@
                     <a class="navbar-brand" href="#">大村智記念学術館</a>
                 </div>
             </nav>
-        </header><br><br>
-        <div class="container-fluid">
+        </header>
+        <div class="container-fluid" style="margin-top:2em;">
         
         
         <p class="spot">現在地点:  <br></p>
@@ -30,11 +30,11 @@
             <form action="{% url 'Arrive' pk%}",method='GET'>
             <button type="submit" name="arrive" class="btn btn-success btn-block">到着</button>
         </form>
-        </div><br>
+        </div>
         <div class="image-container">
             <img src="/media/{{map_img}}">
             <img src="data:image/png;base64,{{graph|safe}}">
-        </div><br>
+        </div>
         <div class="text-center">
             <a href="#" onclick="openModal()">拡大</a></div>
         <div class="text-center">

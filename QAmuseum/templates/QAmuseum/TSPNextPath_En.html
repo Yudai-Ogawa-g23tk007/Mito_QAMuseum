@@ -4,7 +4,7 @@
     {% block body %}
     <div class="container-fluid">
         
-            <div style="position:relative;z-index: 990;">
+    
                 <p class="spot">Now:</p> <br>
                 <p class="text-center name-explain">{{nowspot_name}}<br></p>
                 <p class="spot">Next: <br></p>
@@ -22,8 +22,8 @@
                     <img src="data:image/png;base64,{{graph|safe}}">
                 </div><br>
                 <div class="text-center">
-                    <a href="#" onclick="openModal()">Expansion</a></div>
-                <img src="/media/{{nextimg}}">
+                    <a href="#" onclick="openModal()">Expansion</a>
+                <img src="/media/{{nextimg}}"></div>
                 <div id="myModal" class="modal">
                     <span class="close" onclick="closeModal()">&times;</span>
                     <img src="/media/{{mapimg}}" class="modal-content" alt="Large Image">

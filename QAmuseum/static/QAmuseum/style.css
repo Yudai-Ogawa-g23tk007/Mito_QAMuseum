@@ -170,18 +170,18 @@ input[type="radio"] {
 .image-container{
     position: relative;
     max-width: 1000px;
-    width: 90%;
-    height: 700px;
+    width: 80%;
+    height: 600px;
     margin: 0 auto;
 }
 
 .image-container img {
     max-width: 1000px;
-    width:90%;
-    height:auto;
+    width:70%;
+    height: auto;
     position: absolute;
     display: block;
-    margin: 1em 40px;
+    margin: 1em 15%;
     transition: transform 0.3s ease;
 }
 
@@ -250,7 +250,7 @@ input[type="radio"] {
     font-size: 54px;
 }
 img{
-    width:80%;
+    width:70%;
     margin: 1em auto;
 }
 .modal {
@@ -297,4 +297,9 @@ img{
 }
 .close-text{
     font-size: 24px;
+}
+
+.text-center img{
+    max-height: 400px;
+    width:auto;
 }
