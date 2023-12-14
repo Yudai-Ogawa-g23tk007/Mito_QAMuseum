@@ -28,16 +28,15 @@
             {{goaltime}} min.<br></p>
         
         <a href="{% url 'Parameter_En' pk  %}">Back to the setting</a><br>
-        
+        </div>
         <div class="image-container">
         <img src="/media/map_all.png">
         <img src="data:image/png;base64,{{graph|safe}}" ></div>
-        </div><br>
-        <div class="text-center">
-            <a href="#" onclick="openModal()">Expansion</a></div>
-        <br>
         
         <div class="text-center">
+            <a href="#" onclick="openModal()">Expansion</a>
+        <br>
+        
         <a href="{% url 'CalcPathWaitEn' pk %}">Recalculate</a><br>
         <a href="{% url 'EnterEn' pk  %}"class="btn btn-success btn-block" role="button" >Start guide</a>
         </div>

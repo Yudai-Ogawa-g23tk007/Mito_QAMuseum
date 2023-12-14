@@ -250,7 +250,7 @@ input[type="radio"] {
     font-size: 54px;
 }
 img{
-    width:70%;
+    width:78%;
     margin: 1em auto;
 }
 .modal {
@@ -302,4 +302,5 @@ img{
 .text-center img{
     max-height: 400px;
     width:auto;
+    max-width: 800px;
 }

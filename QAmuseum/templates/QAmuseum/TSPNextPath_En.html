@@ -11,18 +11,16 @@
                 <p class="text-center name-explain">{{nextspot_name}}</p>
                 <div class="text-center">
 
-                    <div class="mx-auto btn-group">
-                    <!--<form action="{% url 'MuseumPath' pk%}",method='GET'><button type="submit" name="reset" class="btn btn-danger btn-block"><p class='bg'>戻る</p></button></form>-->
                     <form action="{% url 'TSPSpotEn' pk%}",method='GET'>
                     <button type="submit" name="arrive" class="btn btn-success btn-block">Arrive</button></div>
                 </form></div>
-                </div><br>
+                </div>
                 <div class="image-container">
                     <img src="/media/{{mapimg}}" >
                     <img src="data:image/png;base64,{{graph|safe}}">
-                </div><br>
+                </div>
                 <div class="text-center">
-                    <a href="#" onclick="openModal()">Expansion</a>
+                    <a href="#" onclick="openModal()">Expansion</a><br>
                 <img src="/media/{{nextimg}}"></div>
                 <div id="myModal" class="modal">
                     <span class="close" onclick="closeModal()">&times;</span>
