@@ -174,8 +174,11 @@ def TSPCalcEn(request,pk):
 
 def Reload(request):
     task = reload.delay()
-    return redirect('Reload')
-    
+    return redirect('ReloadResult')
+
+def ReloadResult(request):
+    return render(request,"QAmuseum/Reload.html")
+
 def TSPPathShow(request,pk):
     obj=UserPath.objects.get(pk=pk)
     obj.last_page=request.build_absolute_uri()

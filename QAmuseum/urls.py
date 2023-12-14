@@ -53,4 +53,5 @@ urlpatterns=[
     path("Enter/<int:pk>",views.Enter,name="Enter"),
     path("EnterEn/<int:pk>",views.EnterEn,name="EnterEn"),
     path("Reload",views.Reload,name="Reload"),
+    path("ReloadResult",views.ReloadResult,name="ReloadResult")
 ]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
