@@ -130,3 +130,43 @@ class LoginForm(forms.Form):
     name = forms.CharField(label='name',max_length=20)
     password = forms.CharField(label='password',widget=forms.PasswordInput(),max_length=4,validators=[MinLengthValidator(4)])
 
+
+class TSPParameterForm(forms.Form):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.label_suffix = " "
+    choice_speed=(
+        (70,"速い(70m/分)"),
+        (60,"普通(60m/分)"),
+        (50,"遅い(50m/分)"),
+        )
+    speed = forms.ChoiceField(label="歩く速度",choices=choice_speed,widget=forms.Select(attrs={'class': 'form-param'}))
+    choice_browse=(
+        (2.0,"速い"),
+        (1.5,"やや速い"),
+        (1.0,"普通"),
+        (0.75,"やや遅い"),
+        (0.5,"遅い")
+    )
+    browse = forms.ChoiceField(label="閲覧時間",choices=choice_browse,widget=forms.Select(attrs={'class': 'form-param'}))
+    
+class TSPParameterEnForm(forms.Form):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.label_suffix = " "
+    
+    choice_speed=(
+        (70,"Fast(70m/m)"),
+        (60,"Normal(60m/m)"),
+        (50,"Slow(50m/m)"),
+        )
+    speed = forms.ChoiceField(label="Walking Speed",choices=choice_speed,widget=forms.Select(attrs={'class': 'form-param'}))
+    choice_browse=(
+        (2.0,"Very Fast"),
+        (1.5,"Fast"),
+        (1.0,"Normal"),
+        (0.75,"Slow"),
+        (0.5,"Very Slow")
+    )
+    browse = forms.ChoiceField(label="Appreciation Speed",choices=choice_browse,widget=forms.Select(attrs={'class': 'form-param'}))
+    

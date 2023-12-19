@@ -21,7 +21,7 @@ header{
     top:0;
     width:90%;
     max-width: 1000px;
-    font-size: larger;
+    font-size: 48px;
 }
 main{
     max-width: 1000px;
@@ -171,7 +171,7 @@ input[type="radio"] {
     position: relative;
     max-width: 1000px;
     width: 80%;
-    height: 600px;
+    height: 500px;
     margin: 0 auto;
 }
 
@@ -181,7 +181,7 @@ input[type="radio"] {
     height: auto;
     position: absolute;
     display: block;
-    margin: 1em 15%;
+    margin: 0 15%;
     transition: transform 0.3s ease;
 }
 
@@ -248,6 +248,11 @@ input[type="radio"] {
 }
 .name-explain{
     font-size: 54px;
+    border: 5px solid #49274a; /* ボーダーの色は青 (#3498db) に設定 */
+    padding: 20px; /* 内側の余白を追加 */
+    border-radius: 10px; /* ボックスの角を丸める */
+    background-color:  #f8eee7; /* ボックスの背景色を設定 */
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 img{
     width:78%;
@@ -296,11 +301,26 @@ img{
     cursor: pointer;
 }
 .close-text{
-    font-size: 24px;
+    font-size: 32px;
 }
 
 .text-center img{
     max-height: 400px;
     width:auto;
     max-width: 800px;
+}
+
+.picture-frame {
+    
+    display: inline-block; /* インラインブロックとして表示 */
+}
+
+/* 画像のサイズを適当に指定 */
+.picture-frame img {
+    max-width: 100%;
+    height: auto;
+    display: block;
+    border: 15px solid #804000;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+    box-sizing: border-box;
 }

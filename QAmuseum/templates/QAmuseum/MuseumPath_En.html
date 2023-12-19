@@ -25,10 +25,9 @@
         <p class="spot">Next: <br></p>
         <p class="text-center name-explain">{{nextspot_name}}</p>
         <div class="text-center">
-            <form action="{% url 'ArriveEn' pk%}",method='GET'>
-            <button type="submit" name="arrive" class="btn btn-success btn-block">Arrive</button>
-        </div>
-        </form>
+            <div class="picture-frame">
+            <img src="/media/{{img}}" >
+        </div></div>
         <div class="image-container">
             <img src="/media/{{map_img}}">
             <img src="data:image/png;base64,{{graph|safe}}">
@@ -36,7 +35,10 @@
         <div class="text-center">
             <a href="#" onclick="openModal()">Expansion</a></div>
         <div class="text-center">
-        <img src="/media/{{img}}" >
+            <form action="{% url 'ArriveEn' pk%}",method='GET'>
+                <button type="submit" name="arrive" class="btn btn-success btn-block">Arrive</button>
+            </form>
+        
         </div></div>
         <div id="myModal" class="modal">
             <span class="close" onclick="closeModal()">&times;</span>

@@ -5,15 +5,14 @@
     <div class="container-fluid">
         
     
-                <p class="spot">Now:</p> <br>
-                <p class="text-center name-explain">{{nowspot_name}}<br></p>
-                <p class="spot">Next: <br></p>
+                <p class="spot">Now:</p>
+                <p class="text-center name-explain">{{nowspot_name}}</p>
+                <p class="spot">Next:</p>
                 <p class="text-center name-explain">{{nextspot_name}}</p>
                 <div class="text-center">
-
-                    <form action="{% url 'TSPSpotEn' pk%}",method='GET'>
-                    <button type="submit" name="arrive" class="btn btn-success btn-block">Arrive</button></div>
-                </form></div>
+                    <div class="picture-frame">
+                    <img src="/media/{{nextimg}}">
+                    </div>
                 </div>
                 <div class="image-container">
                     <img src="/media/{{mapimg}}" >
@@ -21,7 +20,12 @@
                 </div>
                 <div class="text-center">
                     <a href="#" onclick="openModal()">Expansion</a><br>
-                <img src="/media/{{nextimg}}"></div>
+                <form action="{% url 'TSPSpotEn' pk%}",method='GET'>
+                    <button type="submit" name="arrive" class="btn btn-success btn-block">Arrive</button></div>
+                </form>
+                
+                </div>
+
                 <div id="myModal" class="modal">
                     <span class="close" onclick="closeModal()">&times;</span>
                     <img src="/media/{{mapimg}}" class="modal-content" alt="Large Image">

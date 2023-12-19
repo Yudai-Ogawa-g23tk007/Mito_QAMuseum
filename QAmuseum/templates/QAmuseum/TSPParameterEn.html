@@ -1,0 +1,24 @@
+{% extends "base_En.html" %}
+    {% block ul %}
+    {% endblock %}
+    {% block body %}
+    <div class="container-fluid">
+        <br><br>
+        <form method="POST">
+            {% csrf_token %}
+            {% for field in form %}
+            <div class="form-label">
+            {{ field.label_tag}}<br></div>
+            <div class="form-center">
+            {{field}}</div><br>
+            {% endfor %}
+            <div class="text-center">
+            <button type="submit" class="btn btn-success btn-block">Next</button></div>
+            <br><br>
+                    
+        </form>
+        <div class="text-center">
+        <a href="{% url 'ParameterSelectEn' pk %}">Back to Select</a><br>
+        </div>
+    </div>
+    {% endblock %}

@@ -7,14 +7,15 @@
         <p class="spot">現在地点:<br></p>
         <p class="text-center name-explain">{{name}}<br></p>
         <div class="text-center">
-        <img src="/media/{{img}}"><br><br></div>
+        <div class="picture-frame">
+        <img src="/media/{{img}}"><br></div></div>
         <p class="spot">説明:<br></p>
         <p class="text-center name-explain">{{explain}}<br></p>
         <div class="text-center">
             <form action="{% url 'EvaluationTSP' pk%}" method="POST">
                 {% csrf_token %}
                 {{form.display_evaluation.label}}:
-                {{form.display_evaluation}}<br>
+                {{form.display_evaluation}}<br><br>
                 <button type="submit" name="button" class="btn btn-success">つぎへ</button>
     <br><br>
             </form></div>

@@ -3,25 +3,28 @@
     {% endblock %}
     {% block body %}
     <div class="container-fluid">
-        <p class="spot">現在地点: <br></p>
-        <p class="text-center name-explain">{{nowspot_name}}<br></p>
-        <p class="spot">次の地点: <br></p>
+        <p class="spot">現在地点: </p>
+        <p class="text-center name-explain">{{nowspot_name}}</p>
+        <p class="spot">次の地点: </p>
         <p class="text-center name-explain">{{nextspot_name}}</p>
                 <div class="text-center">
+                    <div class="picture-frame">
+                    <img src="/media/{{nextimg}}" >
+                    </div></div>
 
-                    <form action="{% url 'TSPSpot' pk%}",method='GET'>
-                    <button type="submit" name="arrive" class="btn btn-success btn-block">到着</button>
-                </div>
-                </form>
-                <br>
                 <div class="image-container">
                     <img src="/media/{{mapimg}}" >
                     <img src="data:image/png;base64,{{graph|safe}}">
                 </div>
-                <div class="text-center">
+
+            <div class="text-center">
                 <a href="#" onclick="openModal()">拡大</a><br>
-                <img src="/media/{{nextimg}}" >
+                <form action="{% url 'TSPSpot' pk%}",method='GET'>
+                    <button type="submit" name="arrive" class="btn btn-success btn-block">到着</button>
+                </form>
             </div></div>
+
+
             <div id="myModal" class="modal">
                 <span class="close" onclick="closeModal()">&times;</span>
                 <img src="/media/{{mapimg}}" class="modal-content" alt="Large Image">

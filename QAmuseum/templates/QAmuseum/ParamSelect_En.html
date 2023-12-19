@@ -7,7 +7,7 @@
         Please select a method<br></div>
         <div class="formselect">
         <form method="POST" action="{% url 'ParameterSelectEn' pk=pk %}">{% csrf_token %}
-        <label><input type="radio" name="radio_option" value="option1" onclick="ChangeButton('Start to calculate')">Viewing All Exhibition</label><br>
+        <label><input type="radio" name="radio_option" value="option1" onclick="ChangeButton('Next')">Viewing All Exhibition</label><br>
         <label><input type="radio" name="radio_option" value="option2" onclick="ChangeButton('Next')">Setting Time</label><br>
         </div><br>
         <div class="text-center">

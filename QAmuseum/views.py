@@ -8,7 +8,7 @@ from .omuracalculate import calculatepath,time_for_move_calc,time_stay,recalcula
 from .omurapix import Next_img
 from QAmuseum.views_modules import module
 from django.views.generic import ListView,CreateView
-from .forms import parameterform,NameForm,EvaluationForm,parameterEnform,LoginForm,EvaluationEnForm
+from .forms import parameterform,NameForm,EvaluationForm,parameterEnform,LoginForm,EvaluationEnForm,TSPParameterEnForm,TSPParameterForm
 import matplotlib.pyplot as plt
 from io import BytesIO
 import base64
@@ -117,7 +117,7 @@ def ParameterSelect(request,pk):
     if request.method == 'POST':
         select_option=request.POST.get('radio_option')
         if select_option == 'option1':
-            return HttpResponseRedirect(reverse('TSPCalc',args=[pk]))
+            return HttpResponseRedirect(reverse('TSPParameter',args=[pk]))
         if select_option == 'option2':
             return HttpResponseRedirect(reverse('Parameter',args=[pk]))
     return render(request,"QAmuseum/ParamSelect.html",{'pk':pk})
@@ -130,7 +130,7 @@ def ParameterSelectEn(request,pk):
     if request.method == 'POST':
         select_option = request.POST.get('radio_option')
         if select_option == 'option1':
-            return HttpResponseRedirect(reverse('TSPCalcEn',args=[pk]))
+            return HttpResponseRedirect(reverse('TSPParameterEn',args=[pk]))
         if select_option == 'option2':
             return HttpResponseRedirect(reverse('Parameter_En',args=[pk]))
     return render(request,"QAmuseum/ParamSelect_En.html",{'pk':pk})
@@ -153,6 +153,49 @@ def CalcPathWaitEn(request,pk):
     obj.caluculate_back = task
     obj.save()
     return redirect('AllMuseumPathEn',pk)
+
+def TSPParameter(request,pk):
+    obj=UserPath.objects.get(pk=pk)
+    obj.last_page=request.build_absolute_uri()
+    obj.save()
+    initial_values={"speed":obj.speed,"browse":obj.browse}
+    form = TSPParameterForm(initial_values)
+    ctx={"form":form,'pk':pk}
+    if request.method == 'POST':
+        form = TSPParameterForm(request.POST)
+        if form.is_valid():
+            speed = form.cleaned_data["speed"]
+            browse=form.cleaned_data["browse"]
+            obj.speed=speed
+            obj.browse=browse
+            obj.count_time=0
+            obj.calc_bool=False
+            obj.save()
+            return redirect('TSPCalc',pk)
+    return render(request,"QAmuseum/TSPParameter.html",ctx)
+
+
+def TSPParameterEn(request,pk):
+    obj=UserPath.objects.get(pk=pk)
+    obj.last_page=request.build_absolute_uri()
+    obj.save()
+    initial_values={"speed":obj.speed,"browse":obj.browse}
+    form = TSPParameterEnForm(initial_values)
+    ctx={"form":form,'pk':pk}
+    if request.method == 'POST':
+        form = TSPParameterForm(request.POST)
+        if form.is_valid():
+            speed = form.cleaned_data["speed"]
+            browse=form.cleaned_data["browse"]
+            obj.speed=speed
+            obj.browse=browse
+            obj.count_time=0
+            obj.calc_bool=False
+            obj.save()
+            return redirect('TSPCalcEn',pk)
+    return render(request,"QAmuseum/TSPParameterEn.html",ctx)
+
+
 
 def TSPCalc(request,pk):
     
@@ -194,6 +237,7 @@ def TSPPathShow(request,pk):
         goaltime=GoalTime(pt,obj.speed,obj.browse)
         obj.goal_time=int(goaltime)
         obj.count=0
+        obj.start_time=time.time()
         obj.save()
         
         graph = All_Plot_graph(pt)
@@ -217,6 +261,7 @@ def TSPPathShowEn(request,pk):
         goaltime=GoalTime(pt,obj.speed,obj.browse)
         obj.goal_time=int(goaltime)
         obj.count=0
+        obj.start_time=time.time()
         obj.save()
         
         graph = All_Plot_graph(pt)
@@ -1086,7 +1131,7 @@ def All_Plot_graph(path):
     plt.xlim(0,940)
     plt.scatter(spot_x,spot_y,marker="")
     for i in range(len(path)-1):
-        plt.annotate("",xy=[spot_x[int(path[i+1])],spot_y[int(path[i+1])]],xytext=[spot_x[int(path[i])],spot_y[int(path[i])]],arrowprops=dict(shrink=0, width=1, headwidth=8, 
+        plt.annotate("",xy=[spot_x[int(path[i+1])],spot_y[int(path[i+1])]],xytext=[spot_x[int(path[i])],spot_y[int(path[i])]],arrowprops=dict(shrink=0, width=4, headwidth=10, 
                                 headlength=10, connectionstyle='arc3',
                                 facecolor='red', edgecolor='red'))
     plot_x=[]
@@ -1118,7 +1163,7 @@ def Plot_graph(now_spot,next_spot,path):
                                 facecolor='red', edgecolor='red'))"""
    
     for i in range(len(waypoint)-1):
-        plt.annotate("",xy=[spot_x[waypoint[i+1]],spot_y[waypoint[i+1]]],xytext=[spot_x[waypoint[i]],spot_y[waypoint[i]]],arrowprops=dict(shrink=0, width=1, headwidth=8, 
+        plt.annotate("",xy=[spot_x[waypoint[i+1]],spot_y[waypoint[i+1]]],xytext=[spot_x[waypoint[i]],spot_y[waypoint[i]]],arrowprops=dict(shrink=0, width=4, headwidth=10, 
                                 headlength=10, connectionstyle='arc3',
                                 facecolor='red', edgecolor='red'))
         
