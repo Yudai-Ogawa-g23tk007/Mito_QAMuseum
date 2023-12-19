@@ -56,7 +56,7 @@ def qa_stsp(T, start, speed_move, speed_watch, must_visit, already_vist, subrout
     
     #c3_param = abs(BinaryQuadraticModel(time_const).logical_matrix[0].to_numpy()).max()
     #p = 40
-    maxtm=0.15
+    maxtm=0.15*60
     maxts=6.0
     tmts=(maxtm+maxts)*(maxtm+maxts)
     if T<=30:
@@ -67,11 +67,11 @@ def qa_stsp(T, start, speed_move, speed_watch, must_visit, already_vist, subrout
     if T <= 5:
         p = 40
     elif T <= 10:
-        p = 30
+        p = 10
     elif T <= 20:
-        p = 25
+        p = 7
     else:
-        p = 20
+        p = 6
     print(p)
     # T = 60 p = 9
     # T = 70 p = 9
