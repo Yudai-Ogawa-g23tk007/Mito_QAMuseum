@@ -71,7 +71,7 @@ def qa_stsp(T, start, speed_move, speed_watch, must_visit, already_vist, subrout
     elif T <= 20:
         p = 7
     else:
-        p = 6
+        p = 8
     print(p)
     # T = 60 p = 9
     # T = 70 p = 9
