@@ -56,25 +56,26 @@ def qa_stsp(T, start, speed_move, speed_watch, must_visit, already_vist, subrout
     
     #c3_param = abs(BinaryQuadraticModel(time_const).logical_matrix[0].to_numpy()).max()
     #p = 40
-    maxtm=0.15*60
+    maxtm=0.15
     maxts=6.0
     tmts=(maxtm+maxts)*(maxtm+maxts)
     if T<=30:
         c3_param=2.2*tmts
     else:
         c3_param=2*(maxtm+maxts)*T-tmts+0.1*(2*(maxtm+maxts)*(T-1)-tmts)
+    
     if T <= 5:
         p = 40
     elif T <= 10:
-        p = 15
+        p = 30
     elif T <= 20:
-        p = 10
+        p = 25
     else:
-        p = 8
+        p = 20
     print(p)
     # T = 60 p = 9
     # T = 70 p = 9
-    model = BinaryQuadraticModel(cost + vertex_const*p + sg_const*p + time_const/c3_param*p + once_visit_const*p + once_route_const*p + subtour_const*p + already_vist_const*p + must_visit_const*p)  ### いい感じにPTしたい ###
+    model = BinaryQuadraticModel(cost + vertex_const*p + sg_const*p + p*time_const/c3_param + once_visit_const*p + once_route_const*p + subtour_const*p + already_vist_const*p + must_visit_const*p)  ### いい感じにPTしたい ###
     
     # Fixstars Amplify
     client = FixstarsClient()
