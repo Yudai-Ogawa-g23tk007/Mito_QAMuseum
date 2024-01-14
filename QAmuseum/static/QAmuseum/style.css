@@ -324,3 +324,18 @@ img{
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
     box-sizing: border-box;
 }
+
+.QAtitle {
+    color:#49274a;
+    font-size: 64px;
+    text-decoration:underline;
+    }
+.QAsub {
+    color:#49274a;
+    font-size: 48px;
+    text-decoration:underline;
+}
+
+.QAurl{
+    text-align: center;
+}

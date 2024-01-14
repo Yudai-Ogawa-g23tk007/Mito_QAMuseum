@@ -735,6 +735,8 @@ def EvaluationTSP(request,pk):
     UpdateUserPath(pk)
     obj=UserPath.objects.get(pk=pk)
     if obj.next_spot == 0:
+        obj.count_time=time.time()-obj.start_time
+        obj.save()
         return redirect("End",pk)
     return redirect("TSPNextPath",pk)
 
@@ -755,6 +757,8 @@ def EvaluationTSPEn(request,pk):
     UpdateUserPath(pk)
     obj=UserPath.objects.get(pk=pk)
     if obj.next_spot == 0:
+        obj.count_time=time.time()-obj.start_time
+        obj.save()
         return redirect("EndEn",pk)
     return redirect("TSPNextPathEn",pk)
 
@@ -830,6 +834,8 @@ def Arrive(request,pk):
                     userpath.save()
                     
             else:
+                obj.count_time=time.time()-obj.start_time
+                obj.save()
                 return redirect("End",pk)
         if "reset" in request.GET:
             obj =UserPath.objects.get(pk=pk)
@@ -930,6 +936,8 @@ def ArriveEn(request,pk):
                     userpath.calc_bool=True
                     userpath.save()
             else:
+                obj.count_time=time.time()-obj.start_time
+                obj.save()
                 return redirect("EndEn",pk)
         if "reset" in request.GET:
             obj =UserPath.objects.get(pk=pk)
@@ -1076,6 +1084,21 @@ def EndEn(request,pk):
         'count':obj.calculate_count
     }
     return render(request,"QAmuseum/End_En.html",ctx)
+
+def Quantum(request,pk):
+    obj=UserPath.objects.get(pk=pk)
+    obj.last_page=request.build_absolute_uri()
+    obj.save()
+    ctx={'pk':pk}
+    return render(request,"QAmuseum/Quantum.html",ctx)
+
+def QuantumEn(request,pk):
+    obj=UserPath.objects.get(pk=pk)
+    obj.last_page=request.build_absolute_uri()
+    obj.save()
+    ctx={'pk':pk}
+    return render(request,"QAmuseum/Quantum_En.html",ctx)
+
 
 def ReCalculate(request,pk):
     return render(request,"QAmuseum/ReCalculate.html",{"pk":pk})

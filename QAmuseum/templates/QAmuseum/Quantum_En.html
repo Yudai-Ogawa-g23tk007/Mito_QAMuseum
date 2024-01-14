@@ -1,0 +1,53 @@
+{% extends "base_En.html" %}
+    {% block ul %}
+    <ul class="navbar-nav"><li class="nav-item"><a href="{% url 'EndEn' pk %}" class="nav-link">Back</a></li></ul>
+    {% endblock %}
+    {% block body %}
+    <div class="container-fluid">
+        <p class="QAtitle">What is a quantum computer?</p><br>
+        <p class="QAtext">
+            Quantum computers are a new technology that uses quantum properties to perform calculations.<br>
+            It is expected to perform calculations in a completely different way from conventional computers, and to be faster and more energy-efficient than conventional computers.
+        </p>
+        <br>
+        <p class="QAsub">What is the nature of quantum...?　Why is it fast?</p><br>
+        <p class="QAtext">
+            Conventional computers perform calculations using two states: "0" (no electricity) and "1" (electricity passes through).
+            In contrast, a quantum computer performs calculations using three quantum states: "0," "1," and a superposition of 0 and 1.
+            The "superposition state of 0 and 1" is a state that is 0 with probability P and 1 with probability (1-P) when observed from the outside, but can be either 0 or 1 until then.
+            Schrodinger's cat" is a famous explanation of this state.
+            For example, when checking the four states "00," "01," "10," and "11," a conventional computer checks all the states one by one, so the process is executed four times.
+            A quantum computer, on the other hand, uses a "superposition of 0s and 1s" to simultaneously check the four states, so the calculation can be performed in a single process.
+            Therefore, a quantum computer can perform a calculation in one-fourth the time of a conventional computer.
+            This is the reason why quantum computers are said to be capable of high-speed computation.
+            <br>
+            <div class="text-center">
+                <img src="/media/Quantum1.png">
+            </div><br>
+            There are many such problems in real life.
+            For example, Google Maps is often used to find routes, part-time job shifts are arranged, and traffic signals are controlled.
+            The larger the number of combinations, the more difficult it becomes to compute them in a realistic time using conventional computers.
+            Research is actively being conducted on how to use quantum computers to compute such problems at high speed.
+            <br>
+            <div class="text-center">
+                <img src="/media/Quantum2.png">
+            </div>
+    
+            
+        </p><br>
+        <p class="QAsub">How much energy is saved?</p><br>
+        <p class="QAtext">
+            Fugaku, the supercomputer of which Japan is proud, consumes 30 MW of power per hour (enough power for a family of four for six years)*.
+            In contrast, D-Wave's quantum annealing machine can perform calculations with less than 25 kW, or less than 1/1,500th of the power consumption of Toyama's quantum computing technology.
+            From this point of view, quantum computing technology is considered important as a technology that will support the future IT society.
+        </p><br>
+        <p class="QAurl">
+            *Citation: RIKEN Hello! Supercomputer Tomidake Edition No. 5 This is "Tomidake<br>
+        <a href="https://www.r-ccs.riken.jp/intro-hpc/hellosc-fugaku/05.html">(https://www.r-ccs.riken.jp/intro-hpc/hellosc-fugaku/05.html)</a>
+        </p><br>
+        <p class="QAtext">
+            Although I have tried to introduce only the good points of quantum computers, they are still in the development stage and cannot be used easily.
+            However, since the technology is being developed from the aspects of both "research to create quantum computers" and "research to use quantum computers," it is possible that quantum computing technology will be used in products that you use in a few years to a few decades from now.
+        </p>
+    </div>
+    {% endblock %}

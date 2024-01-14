@@ -56,4 +56,8 @@ urlpatterns=[
     path("TSPParameterEn/<int:pk>",views.TSPParameterEn,name="TSPParameterEn"),
     path("Reload",views.Reload,name="Reload"),
     path("ReloadResult",views.ReloadResult,name="ReloadResult"),
+    path("Quantum/<int:pk>",views.Quantum,name="Quantum"),
+    path("QuantumEn/<int:pk>",views.QuantumEn,name="QuantumEn"),
+
+
 ]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
