@@ -21,7 +21,10 @@ header{
     top:0;
     width:90%;
     max-width: 1000px;
-    font-size: 48px;
+    font-size: 36px;
+}
+.nav-link{
+    font-size: 32px;
 }
 main{
     max-width: 1000px;

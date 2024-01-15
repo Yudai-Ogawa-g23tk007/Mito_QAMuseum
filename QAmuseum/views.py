@@ -815,7 +815,6 @@ def Arrive(request,pk):
                 userpath.predict_time=predict_time
                 userpath.save()
                 if int(predict_time) != int(userpath.now_time-userpath.start_time)/60:
-    #if predict_time>0:
                     print(predict_time*60)
                     print(userpath.now_time-userpath.start_time)
                     print("time over")
@@ -828,6 +827,14 @@ def Arrive(request,pk):
                         visit_spot.append(int(i))
                     now_spot=userpath.now_spot
                     now_path=userpath.path
+                    """
+                    if int(predict_time) >= int(userpath.now_time-userpath.start_time)/60:
+                        speed_move=70
+                        speed_watch=2.0
+                    else:
+                        speed_move=50
+                        speed_watch=0.5
+                    """
                     pt=back_calc.delay(T,speed_move,speed_watch,visit_spot,now_spot)
                     userpath.caluculate_back=pt.id
                     userpath.calc_bool=True
@@ -1028,7 +1035,14 @@ def BacktoArrive(request,pk):
     obj.next_spot=next
     obj.visit_path=visit
     obj.save()
-    return redirect("Arrive",pk)
+    value={"display_evaluation":0}
+    ctx={'pk':pk,
+         'explain':obj.exp,
+         'img':obj.image,
+         'name':obj.name,
+         'form':EvaluationForm(value)}
+    
+    return redirect("Arrive",ctx)
 
 def BacktoPath(request,pk):
     BackSave(pk)

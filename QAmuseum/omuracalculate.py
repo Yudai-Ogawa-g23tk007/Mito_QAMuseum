@@ -298,7 +298,7 @@ def GoalTime(path,speed_move,speed_watch):
     route_time = 0
     for p in range(1,len(path)):
         route_time += tm[int(path[p-1])][int(path[p])]*60/speed_move
-        route_time += ts[int(path[p])]*speed_watch
-    route_time -= ts[0]*speed_watch
+        route_time += ts[int(path[p])]/speed_watch
+    route_time -= ts[0]/speed_watch
     
     return route_time
