@@ -35,7 +35,7 @@ class MuseumImage(models.Model):
 class UserPath(models.Model):
     name = models.CharField(max_length=20)#ユーザーネーム
     museumname = models.CharField(max_length=100,default="大村智記念学術館")#美術館名
-    time = models.IntegerField(default=40)#設定巡回時間
+    time = models.IntegerField(default=30)#設定巡回時間
     choice_speed=(
         (70,"速い"),
         (60,"普通"),

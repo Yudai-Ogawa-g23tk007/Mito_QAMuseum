@@ -275,13 +275,13 @@ def TSPNextPath(request,pk):
     obj.save()
     object = {
         "path":obj.path,
-        "nowspot":obj.now_spot,
-        "nextspot":obj.next_spot,
+        "nowspot":obj.now_spot+1,
+        "nextspot":obj.next_spot+1,
         "pk":obj.pk
     }
-    nows=OmuraMuseum.objects.get(id=obj.now_spot)
-    nexts=OmuraMuseum.objects.get(id=obj.next_spot)
-    nextmap=OmuraMuseum.objects.get(id=obj.next_spot)
+    nows=OmuraMuseum.objects.get(id=obj.now_spot+1)
+    nexts=OmuraMuseum.objects.get(id=obj.next_spot+1)
+    nextmap=OmuraMuseum.objects.get(id=obj.next_spot+1)
     spot={"nowspot_name":nows.name,
           "nextspot_name":nexts.name,
           "mapimg":nextmap.map_image,
@@ -289,7 +289,7 @@ def TSPNextPath(request,pk):
           }
     object.update(spot)
     pt=obj.path.split(',')
-    graph = Plot_graph(obj.now_spot-1,obj.next_spot-1,pt)
+    graph = Plot_graph(obj.now_spot,obj.next_spot,pt)
     object['graph']=graph
     return render(request,"QAmuseum/TSPNextPath.html",object)
 
@@ -322,7 +322,7 @@ def TSPSpot(request,pk):
     obj.last_page=request.build_absolute_uri()
     obj.save()
     nsp = obj.now_spot
-    spot = OmuraMuseum.objects.get(id=nsp+1)
+    spot = OmuraMuseum.objects.get(id=nsp)
     object_spot={'name':spot.name,'explain':spot.exp,
                 "img":spot.image,
                 "pk":obj.pk}
@@ -1016,11 +1016,39 @@ def BackSave(pk):
     if len(visit)==0:
         now=0
     else:
-        now=int(visit.pop())
+        #nex=int(visit.pop())
+        now=int(visit[obj.count-1])
         obj.now_spot=now
         obj.next_spot=next
+        temp=[]
+        for i in range(obj.count):
+            temp.append(int(visit[i]))
+            print(temp)
+        pd=str(temp)
+        pa = pd.replace(']','')
+        visit = pa.replace('[','')
         obj.visit_path=visit
+        obj.count -=1
         obj.save()
+def BackPath(pk):
+    obj= UserPath.objects.get(pk=pk)
+    visit=obj.visit_path.split(',')
+    if len(visit)==0:
+        er=True
+    else:
+        
+        temp=[]
+        for i in range(obj.count):
+            temp.append(int(visit[i]))
+            print(temp)
+        pd=str(temp)
+        pa = pd.replace(']','')
+        visit = pa.replace('[','')
+        obj.visit_path=visit
+        obj.count -=1
+        obj.save()
+        er=False
+    return er
 
 def BacktoArrive(request,pk):
     obj= UserPath.objects.get(pk=pk)
@@ -1059,8 +1087,16 @@ def BacktoTSPSpot(request,pk):
     return redirect("TSPSpot",pk)
 
 def BacktoTSPPath(request,pk):
-    BackSave(pk)
-    return redirect("TSPPath",pk)
+    obj= UserPath.objects.get(pk=pk)
+    if obj.now_spot!=0:
+        er=BackPath(pk)
+        if er==False:
+            return redirect("TSPNextPath",pk)
+        else:
+            return redirect("TSPPathShow",pk)
+    else:
+        return redirect("TSPPathShow",pk)
+
 
 def BacktoTSPSpotEn(request,pk):
     BackSave(pk)
