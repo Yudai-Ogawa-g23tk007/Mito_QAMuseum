@@ -22,7 +22,8 @@
                     <a href="#" onclick="openModal()">Expansion</a><br>
                 <form action="{% url 'TSPSpotEn' pk%}",method='GET'>
                     <button type="submit" name="arrive" class="btn btn-success btn-block">Arrive</button></div>
-                </form>
+                </form><br>
+                <a href="{% url 'BacktoTSPSpotEn' pk %}">Back</a>
                 
                 </div>
 

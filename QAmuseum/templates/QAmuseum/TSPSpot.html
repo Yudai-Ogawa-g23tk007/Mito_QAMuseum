@@ -17,12 +17,14 @@
                 {{form.display_evaluation.label}}:
                 {{form.display_evaluation}}<br><br>
                 <button type="submit" name="button" class="btn btn-success">つぎへ</button>
-    <!--            
+                
                 <br>
-                <a href="{% url 'BacktoTSPPath' pk %}">戻る</a>
-    -->
+                
                 <br><br>
-            </form></div>
+            </form>
+            <a href="{% url 'TSPNextPath' pk %}">戻る</a>
+    
+        </div>
         </div>
     
     {% endblock %}

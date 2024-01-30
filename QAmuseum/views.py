@@ -4,17 +4,16 @@ from django.shortcuts import render,redirect
 from django.http import HttpResponse,HttpResponseRedirect
 from django.contrib.auth.models import User
 from .models import UserPath,OmuraMuseum,MuseumEvaluation
-from .omuracalculate import calculatepath,time_for_move_calc,time_stay,recalculate,data,TSPCalculate,GoalTime
-from .omurapix import Next_img
+from .omuracalculate import calculatepath,time_stay,recalculate,data,TSPCalculate,GoalTime
+
 from QAmuseum.views_modules import module
-from django.views.generic import ListView,CreateView
-from .forms import parameterform,NameForm,EvaluationForm,parameterEnform,LoginForm,EvaluationEnForm,TSPParameterEnForm,TSPParameterForm
+from django.views.generic import CreateView
+from .forms import parameterform,EvaluationForm,parameterEnform,LoginForm,EvaluationEnForm,TSPParameterEnForm,TSPParameterForm
 import matplotlib.pyplot as plt
 from io import BytesIO
 import base64
 from PIL import Image
 import time
-#from .recalculate import recalculate
 from celery import shared_task
 from celery.result import AsyncResult
 from django_celery_results.models import TaskResult
@@ -22,7 +21,6 @@ from django import forms
 from django.urls import reverse
 from django.conf import settings
 import os
-# Create your views here.
 
 #スタート画面
 def Start(request):
@@ -97,7 +95,6 @@ def Login(request):
 
 def Login_En(request):
     form = LoginForm()
-    
     if request.POST:
         form = LoginForm(request.POST)
         if form.is_valid():
@@ -198,8 +195,6 @@ def TSPParameterEn(request,pk):
 
 
 def TSPCalc(request,pk):
-    
-    #path = allview_calc()
     task = test_calc.delay()
     obj  = UserPath.objects.get(pk=pk)
     obj.caluculate_back = task
@@ -207,8 +202,6 @@ def TSPCalc(request,pk):
     return redirect('TSPPathShow',pk)
 
 def TSPCalcEn(request,pk):
-    
-    #path = allview_calc()
     task = test_calc.delay()
     obj  = UserPath.objects.get(pk=pk)
     obj.caluculate_back = task
@@ -239,9 +232,7 @@ def TSPPathShow(request,pk):
         obj.count=0
         obj.start_time=time.time()
         obj.save()
-        
-        graph = All_Plot_graph(pt)
-        
+        graph = All_Plot_graph(pt)#経路描画
         ctx={'pk':pk,'path':path,"graph":graph,"goaltime":obj.goal_time}
         return render(request,"QAmuseum/TSPPathShow.html",ctx)
     return render(request,"QAmuseum/TSPCalc.html",{'pk':pk})
@@ -263,8 +254,7 @@ def TSPPathShowEn(request,pk):
         obj.count=0
         obj.start_time=time.time()
         obj.save()
-        
-        graph = All_Plot_graph(pt)
+        graph = All_Plot_graph(pt)#経路描画
         ctx={'pk':pk,'path':path,"graph":graph,"goaltime":obj.goal_time}
         return render(request,"QAmuseum/TSPPathShow_En.html",ctx)
     return render(request,"QAmuseum/TSPCalc_En.html",{'pk':pk})
@@ -275,13 +265,13 @@ def TSPNextPath(request,pk):
     obj.save()
     object = {
         "path":obj.path,
-        "nowspot":obj.now_spot+1,
-        "nextspot":obj.next_spot+1,
+        "nowspot":obj.now_spot,
+        "nextspot":obj.next_spot,
         "pk":obj.pk
     }
-    nows=OmuraMuseum.objects.get(id=obj.now_spot+1)
-    nexts=OmuraMuseum.objects.get(id=obj.next_spot+1)
-    nextmap=OmuraMuseum.objects.get(id=obj.next_spot+1)
+    nows=OmuraMuseum.objects.get(id=obj.now_spot)
+    nexts=OmuraMuseum.objects.get(id=obj.next_spot)
+    nextmap=OmuraMuseum.objects.get(id=obj.next_spot)
     spot={"nowspot_name":nows.name,
           "nextspot_name":nexts.name,
           "mapimg":nextmap.map_image,
@@ -289,7 +279,7 @@ def TSPNextPath(request,pk):
           }
     object.update(spot)
     pt=obj.path.split(',')
-    graph = Plot_graph(obj.now_spot,obj.next_spot,pt)
+    graph = Plot_graph(obj.now_spot-1,obj.next_spot-1,pt)
     object['graph']=graph
     return render(request,"QAmuseum/TSPNextPath.html",object)
 
@@ -322,7 +312,7 @@ def TSPSpot(request,pk):
     obj.last_page=request.build_absolute_uri()
     obj.save()
     nsp = obj.now_spot
-    spot = OmuraMuseum.objects.get(id=nsp)
+    spot = OmuraMuseum.objects.get(id=nsp+1)
     object_spot={'name':spot.name,'explain':spot.exp,
                 "img":spot.image,
                 "pk":obj.pk}
@@ -434,9 +424,6 @@ def Parameter_En(request,pk):
                     "pk":user_path.pk
                 }
             object=UserPath.objects.get(pk=pk)
-            #return render(request,"QAmuseum/CalculatePath.html/",{"pk":pk,"user_path":object})
-            #return reverse("MuseumPath",kwargs={"pk":pk,"user_path":object})
-            #return render(request,"QAmuseum/CalculatePath.html/",{'object':object,'pk':pk})
             return HttpResponseRedirect(reverse('CalcPathWaitEn',args=[pk]))
     return render(request, "QAmuseum/Parameter_En.html",ctx)
 
@@ -566,14 +553,6 @@ def MuseumPath(request,pk):
     obj=UserPath.objects.get(pk=pk)
     obj.last_page=request.build_absolute_uri()
     obj.save()
-    if "reset" in request.GET:
-            obj =UserPath.objects.get(pk=pk)
-            path = obj.path.split(',')
-            if obj.count > 0:
-                obj.count = obj.count-1
-                obj.now_spot=path[obj.count]
-                obj.next_spot=path[obj.count+1]
-                obj.save()
     
     userpath = UserPath.objects.filter(pk=pk)
     for userpath in userpath:
@@ -725,7 +704,7 @@ def EvaluationTSP(request,pk):
             ev=form.cleaned_data["display_evaluation"]
             if int(ev)==0:
                 print(ev)
-                #return redirect("TSPSpot",pk)
+                
             else:
                 userpath=UserPath.objects.get(pk=pk)
                 spot=OmuraMuseum.objects.get(id=userpath.now_spot+1)
@@ -747,7 +726,7 @@ def EvaluationTSPEn(request,pk):
             ev=form.cleaned_data["display_evaluation"]
             if int(ev)==0:
                 print(ev)
-                #return redirect("TSPSpot",pk)
+                
             else:
                 userpath=UserPath.objects.get(pk=pk)
                 spot=OmuraMuseum.objects.get(id=userpath.now_spot+1)
@@ -827,14 +806,6 @@ def Arrive(request,pk):
                         visit_spot.append(int(i))
                     now_spot=userpath.now_spot
                     now_path=userpath.path
-                    """
-                    if int(predict_time) >= int(userpath.now_time-userpath.start_time)/60:
-                        speed_move=70
-                        speed_watch=2.0
-                    else:
-                        speed_move=50
-                        speed_watch=0.5
-                    """
                     pt=back_calc.delay(T,speed_move,speed_watch,visit_spot,now_spot)
                     userpath.caluculate_back=pt.id
                     userpath.calc_bool=True
@@ -844,37 +815,7 @@ def Arrive(request,pk):
                 obj.count_time=time.time()-obj.start_time
                 obj.save()
                 return redirect("End",pk)
-        if "reset" in request.GET:
-            obj =UserPath.objects.get(pk=pk)
-            path = obj.path.split(',')
-            if obj.count > 0:
-                obj.count = obj.count-1
-            else:
-                obj.count=0
-            obj.now_spot=path[obj.count]
-            obj.next_spot=path[obj.count+1]
-            obj.save()
-            userpath = UserPath.objects.filter(pk=pk)
-            for userpath in userpath:
-                object = {
-                    "path":userpath.path,
-                    "nowspot":userpath.now_spot+1,
-                    "nextspot":userpath.next_spot+1,
-                    "pk":userpath.pk
-                    }
-            nowsp=userpath.now_spot+1
-            nextsp=userpath.next_spot+1
-            now_spot=OmuraMuseum.objects.get(id=nowsp)
-            next_spot=OmuraMuseum.objects.get(id=nextsp)
-            spot={"nowspot_name":now_spot.name,
-                "nextspot_name":next_spot.name,
-                }
-            object.update(spot)
-            pt=userpath.path.split(',')
-            graph = Plot_graph(userpath.now_spot,userpath.next_spot,pt)
-            object['graph']=graph
-            return render(request, "QAmuseum/MuseumPath.html",{'object':object,'pk':pk})
-    
+        
     userpath=UserPath.objects.get(pk=pk)
     path = userpath.path.split(',')
 
@@ -925,7 +866,7 @@ def ArriveEn(request,pk):
                 userpath.predict_time=predict_time
                 userpath.save()
                 if int(predict_time) != int(userpath.now_time-userpath.start_time)/60:
-    #if predict_time>0:
+    
                     print(predict_time*60)
                     print(userpath.now_time-userpath.start_time)
                     print("time over")
@@ -946,37 +887,7 @@ def ArriveEn(request,pk):
                 obj.count_time=time.time()-obj.start_time
                 obj.save()
                 return redirect("EndEn",pk)
-        if "reset" in request.GET:
-            obj =UserPath.objects.get(pk=pk)
-            path = obj.path.split(',')
-            if obj.count > 0:
-                obj.count = obj.count-1
-            else:
-                obj.count=0
-            obj.now_spot=path[obj.count]
-            obj.next_spot=path[obj.count+1]
-            obj.save()
-            userpath = UserPath.objects.filter(pk=pk)
-            for userpath in userpath:
-                object = {
-                    "path":userpath.path,
-                    "nowspot":userpath.now_spot+1,
-                    "nextspot":userpath.next_spot+1,
-                    "pk":userpath.pk
-                    }
-            nowsp=userpath.now_spot+1
-            nextsp=userpath.next_spot+1
-            now_spot=OmuraMuseum.objects.get(id=nowsp)
-            next_spot=OmuraMuseum.objects.get(id=nextsp)
-            spot={"nowspot_name":now_spot.en_name,
-                "nextspot_name":next_spot.en_name,
-                }
-            object.update(spot)
-            pt=userpath.path.split(',')
-            graph = Plot_graph(userpath.now_spot,userpath.next_spot,pt)
-            object['graph']=graph
-            return render(request, "QAmuseum/MuseumPath_En.html",{'object':object,'pk':pk})
-    
+        
     userpath=UserPath.objects.get(pk=pk)
     path = userpath.path.split(',')
 
@@ -1016,7 +927,6 @@ def BackSave(pk):
     if len(visit)==0:
         now=0
     else:
-        #nex=int(visit.pop())
         now=int(visit[obj.count-1])
         obj.now_spot=now
         obj.next_spot=next
@@ -1030,62 +940,92 @@ def BackSave(pk):
         obj.visit_path=visit
         obj.count -=1
         obj.save()
+
 def BackPath(pk):
     obj= UserPath.objects.get(pk=pk)
     visit=obj.visit_path.split(',')
-    if len(visit)==0:
+    if len(visit)<=1:
         er=True
+        temp=[0]
+        pd=str(temp)
+        pa = pd.replace(']','')
+        visit = pa.replace('[','')
+        obj.visit_path=visit
+        obj.count =0
+        obj.save()
     else:
-        
         temp=[]
-        for i in range(obj.count):
+        for i in range(obj.count-1):
             temp.append(int(visit[i]))
             print(temp)
+        obj.next_spot=obj.now_spot
+        obj.now_spot=int(visit[obj.count-2])
+        
         pd=str(temp)
         pa = pd.replace(']','')
         visit = pa.replace('[','')
         obj.visit_path=visit
         obj.count -=1
+        
         obj.save()
         er=False
     return er
 
 def BacktoArrive(request,pk):
     obj= UserPath.objects.get(pk=pk)
-    next=obj.now_spot
-    visit=obj.visit_path.split(',')
-    if len(visit)==0:
-        now=0
+    if obj.now_spot!=0:
+        er=BackPath(pk)
+        if er==False:
+            return redirect("Arrive",pk)
+        else:
+            return redirect("AllMuseumPath",pk)
     else:
-        next=int(visit.pop())
-        now=int(visit.pop())
-    obj.now_spot=now
-    obj.next_spot=next
-    obj.visit_path=visit
-    obj.save()
-    value={"display_evaluation":0}
-    ctx={'pk':pk,
-         'explain':obj.exp,
-         'img':obj.image,
-         'name':obj.name,
-         'form':EvaluationForm(value)}
-    
-    return redirect("Arrive",ctx)
+        return redirect("AllMuseumPath",pk)
 
 def BacktoPath(request,pk):
-    BackSave(pk)
-    return redirect("MuseumPath",pk)
+    obj= UserPath.objects.get(pk=pk)
+    if obj.now_spot!=0:
+        er=BackPath(pk)
+        if er==False:
+            return redirect("MuseumPath",pk)
+        else:
+            return redirect("AllMuseumPath",pk)
+    else:
+        return redirect("AllMuseumPath",pk)
+    
 def BacktoArriveEn(request,pk):
-    BackSave(pk)
-    return redirect("ArriveEn",pk)
+    obj= UserPath.objects.get(pk=pk)
+    if obj.now_spot!=0:
+        er=BackPath(pk)
+        if er==False:
+            return redirect("ArriveEn",pk)
+        else:
+            return redirect("AllMuseumPathEn",pk)
+    else:
+        return redirect("AllMuseumPathEn",pk)
+    
 def BacktoPathEn(request,pk):
-    BackSave(pk)
-    return redirect("MuseuumPathEn",pk)
+    obj= UserPath.objects.get(pk=pk)
+    if obj.now_spot!=0:
+        er=BackPath(pk)
+        if er==False:
+            return redirect("MuseumPathEn",pk)
+        else:
+            return redirect("AllMuseumPathEn",pk)
+    else:
+        return redirect("AllMuseumPathEn",pk)
 
 def BacktoTSPSpot(request,pk):
-    BackSave(pk)
-    return redirect("TSPSpot",pk)
-
+    obj= UserPath.objects.get(pk=pk)
+    if obj.now_spot!=0:
+        er=BackPath(pk)
+        if er==False:
+            return redirect("TSPSpot",pk)
+        else:
+            return redirect("TSPPathShow",pk)
+    else:
+        return redirect("TSPPathShow",pk)
+    
 def BacktoTSPPath(request,pk):
     obj= UserPath.objects.get(pk=pk)
     if obj.now_spot!=0:
@@ -1099,17 +1039,26 @@ def BacktoTSPPath(request,pk):
 
 
 def BacktoTSPSpotEn(request,pk):
-    BackSave(pk)
-    return redirect("TSPSpotEn",pk)
+    obj= UserPath.objects.get(pk=pk)
+    if obj.now_spot!=0:
+        er=BackPath(pk)
+        if er==False:
+            return redirect("TSPSpotEn",pk)
+        else:
+            return redirect("TSPPathShowEn",pk)
+    else:
+        return redirect("TSPPathShowEn",pk)
 
 def BacktoTSPPathEn(request,pk):
-    BackSave(pk)
-    return redirect("TSPPathEn",pk)
-
-#次の経路表示画面
-def NextPath(request):
-    return render(request,"QAmuseum/NextPath.html")
-
+    obj= UserPath.objects.get(pk=pk)
+    if obj.now_spot!=0:
+        er=BackPath(pk)
+        if er==False:
+            return redirect("TSPNextPathEn",pk)
+        else:
+            return redirect("TSPPathShowEn",pk)
+    else:
+        return redirect("TSPPathShowEn",pk)
 #終了画面
 def End(request,pk):
     obj=UserPath.objects.get(pk=pk)
@@ -1231,10 +1180,6 @@ def Plot_graph(now_spot,next_spot,path):
     plt.xlim(0,940)
     plt.scatter(spot_x,spot_y,marker="")
     
-    """plt.annotate("",xy=[spot_x[next_spot],spot_y[next_spot]],xytext=[spot_x[now_spot],spot_y[now_spot]],arrowprops=dict(shrink=0, width=1, headwidth=8, 
-                                headlength=10, connectionstyle='arc3',
-                                facecolor='red', edgecolor='red'))"""
-   
     for i in range(len(waypoint)-1):
         plt.annotate("",xy=[spot_x[waypoint[i+1]],spot_y[waypoint[i+1]]],xytext=[spot_x[waypoint[i]],spot_y[waypoint[i]]],arrowprops=dict(shrink=0, width=4, headwidth=10, 
                                 headlength=10, connectionstyle='arc3',
@@ -1245,10 +1190,7 @@ def Plot_graph(now_spot,next_spot,path):
     for i in path:
         plot_x.append(spot_x[int(i)])
         plot_y.append(spot_y[int(i)])
-    #plt.plot(plot_x,plot_y,color="k")
-    """labels=[num for num in range(len(spot_x))]
-    for i in labels:
-        plt.text(spot_x[i],spot_y[i],i)"""
+    
     plt.gca().spines['right'].set_visible(False)
     plt.gca().spines['top'].set_visible(False)
     plt.gca().spines['bottom'].set_visible(False)

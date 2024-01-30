@@ -241,7 +241,7 @@ input[type="radio"] {
     margin-left: 20px;
 }
 .end-bg{
-    font-size: 100px;
+    font-size: 90px;
 }
 .end-text{
     font-size: 64px;
@@ -340,5 +340,11 @@ img{
 }
 
 .QAurl{
+    text-align: center;
+}
+
+.QAimg{
+    width:100vw;
+    height:100%;
     text-align: center;
 }

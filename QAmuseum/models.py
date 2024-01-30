@@ -86,3 +86,17 @@ class MuseumEvaluation(models.Model):
     display_time=models.FloatField(default=0.0)
     def __str__(self):
         return self.user_name+":"+ self.display_name
+
+"""
+class MuseumPathData(models.Model):
+    id=models.IntegerField(primary_key=True)
+    name=models.CharField(max_length=100)
+    x=models.IntegerField(default=0)
+    y=models.IntegerField(default=0)
+    stay_time=models.FloatField(default=0)
+    for i in range(20):
+        move_time=models.FloatField(default=0)
+    satisfaction=models.FloatField(default=0)
+    def __str__(self):
+        return self.name
+"""

@@ -1,4 +1,4 @@
-# 複数回最適化によるサブツアー排除
+# 経路最適化プログラム（大村記念学術館）
 from ctypes import c_int32
 from amplify import gen_symbols, BinaryPoly,Solver, decode_solution, BinaryQuadraticModel, sum_poly,BinarySymbolGenerator
 from amplify.client import FixstarsClient

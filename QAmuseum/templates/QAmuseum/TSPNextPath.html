@@ -21,7 +21,8 @@
                 <a href="#" onclick="openModal()">拡大</a><br>
                 <form action="{% url 'TSPSpot' pk%}",method='GET'>
                     <button type="submit" name="arrive" class="btn btn-success btn-block">到着</button>
-                </form>
+                </form><br>
+                <a href="{% url 'BacktoTSPSpot' pk %}">戻る</a>
             </div></div>
 
 

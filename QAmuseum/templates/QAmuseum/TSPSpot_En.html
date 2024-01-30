@@ -19,12 +19,11 @@
                 {{form.display_evaluation.label}} :
                 {{form.display_evaluation}}<br><br>
                 <button type="submit" name="button" class="btn btn-success">Next</button>
-               <!--
-                <br>
-                <a href="">Back</a>
-            -->
+               
     <br><br>
-            </form></div>
+            </form>
+            <a href="{%url 'TSPNextPathEn' pk %}">Back</a>
+        </div>
         </div>
     
     {% endblock %}
