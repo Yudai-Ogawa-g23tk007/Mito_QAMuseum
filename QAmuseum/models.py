@@ -3,8 +3,8 @@ from django.contrib.auth.models import User
 from django.core.validators import MinLengthValidator
 # Create your models here.
 
-#大村記念館の各地点データ
-class OmuraMuseum(models.Model):
+#各地点データ
+class Museum(models.Model):
     id=models.IntegerField(primary_key=True)
     name=models.CharField(max_length=100)
     satisfaction=models.FloatField()
@@ -60,7 +60,6 @@ class UserPath(models.Model):
     now_time = models.FloatField(default=0)#現在の巡回時間
     calculate_count = models.IntegerField(default=0)#計算回数
     count = models.IntegerField(default=0)
-    #user = models.OneToOneField(User,on_delete=models.CASCADE,null=True,blank=True)
     goal_time=models.IntegerField(default=0)#巡回にかかる時間
     caluculate_back=models.CharField(default=0,max_length=100)#非同期処理パス
     calc_bool=models.BooleanField(default=False)
@@ -86,17 +85,3 @@ class MuseumEvaluation(models.Model):
     display_time=models.FloatField(default=0.0)
     def __str__(self):
         return self.user_name+":"+ self.display_name
-
-"""
-class MuseumPathData(models.Model):
-    id=models.IntegerField(primary_key=True)
-    name=models.CharField(max_length=100)
-    x=models.IntegerField(default=0)
-    y=models.IntegerField(default=0)
-    stay_time=models.FloatField(default=0)
-    for i in range(20):
-        move_time=models.FloatField(default=0)
-    satisfaction=models.FloatField(default=0)
-    def __str__(self):
-        return self.name
-"""

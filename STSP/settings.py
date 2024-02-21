@@ -26,13 +26,7 @@ SECRET_KEY = 'django-insecure-(tkd255m09z!h4_j4xub=_(-i3oyr2x3#bn1m1&-ih8#om*yd#
 DEBUG = True
 
 
-ALLOWED_HOSTS = ['192.168.7.103',
-                 '127.0.0.1',
-                 '172.24.82.239',
-                 '10.224.16.14',
-                 '192.168.0.240',
-                 '3.113.248.183',
-                 '172.31.7.159',
+ALLOWED_HOSTS = [
                  ]
 
 
@@ -50,7 +44,6 @@ INSTALLED_APPS = [
     'django_bootstrap5',
     'django_celery_beat',
     'django_celery_results',
-    #'QAmuseum',
 ]
 
 MIDDLEWARE = [
@@ -63,7 +56,7 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-ROOT_URLCONF = 'mysite.urls'
+ROOT_URLCONF = 'STSP.urls'
 
 TEMPLATES = [
     {
@@ -82,7 +75,7 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'mysite.wsgi.application'
+WSGI_APPLICATION = 'STSP.wsgi.application'
 
 
 # Database

@@ -3,9 +3,9 @@ from django.forms.models import BaseModelForm
 from django.shortcuts import render,redirect
 from django.http import HttpResponse,HttpResponseRedirect
 from django.contrib.auth.models import User
-from .models import UserPath,OmuraMuseum,MuseumEvaluation
-from .omuracalculate import calculatepath,time_stay,recalculate,data,TSPCalculate,GoalTime
-
+from .models import UserPath,Museum,MuseumEvaluation
+from .pathcalculate import calculatepath,recalculate,data,TSPCalculate,GoalTime
+from .museumdata import time_stay
 from QAmuseum.views_modules import module
 from django.views.generic import CreateView
 from .forms import parameterform,EvaluationForm,parameterEnform,LoginForm,EvaluationEnForm,TSPParameterEnForm,TSPParameterForm
@@ -21,10 +21,6 @@ from django import forms
 from django.urls import reverse
 from django.conf import settings
 import os
-
-#スタート画面
-def Start(request):
-    return render(request,"QAmuseum/Start.html")
 
 #美術館選択画面
 class Name(CreateView):
@@ -269,9 +265,9 @@ def TSPNextPath(request,pk):
         "nextspot":obj.next_spot,
         "pk":obj.pk
     }
-    nows=OmuraMuseum.objects.get(id=obj.now_spot)
-    nexts=OmuraMuseum.objects.get(id=obj.next_spot)
-    nextmap=OmuraMuseum.objects.get(id=obj.next_spot)
+    nows=Museum.objects.get(id=obj.now_spot)
+    nexts=Museum.objects.get(id=obj.next_spot)
+    nextmap=Museum.objects.get(id=obj.next_spot)
     spot={"nowspot_name":nows.name,
           "nextspot_name":nexts.name,
           "mapimg":nextmap.map_image,
@@ -293,9 +289,9 @@ def TSPNextPathEn(request,pk):
         "nextspot":obj.next_spot,
         "pk":obj.pk
     }
-    nows=OmuraMuseum.objects.get(id=obj.now_spot)
-    nexts=OmuraMuseum.objects.get(id=obj.next_spot)
-    nextmap=OmuraMuseum.objects.get(id=obj.next_spot)
+    nows=Museum.objects.get(id=obj.now_spot)
+    nexts=Museum.objects.get(id=obj.next_spot)
+    nextmap=Museum.objects.get(id=obj.next_spot)
     spot={"nowspot_name":nows.en_name,
           "nextspot_name":nexts.en_name,
           "nextimg":nexts.image,
@@ -312,7 +308,7 @@ def TSPSpot(request,pk):
     obj.last_page=request.build_absolute_uri()
     obj.save()
     nsp = obj.now_spot
-    spot = OmuraMuseum.objects.get(id=nsp+1)
+    spot = Museum.objects.get(id=nsp+1)
     object_spot={'name':spot.name,'explain':spot.exp,
                 "img":spot.image,
                 "pk":obj.pk}
@@ -326,7 +322,7 @@ def TSPSpotEn(request,pk):
     obj.last_page=request.build_absolute_uri()
     obj.save()
     nsp = obj.now_spot
-    spot = OmuraMuseum.objects.get(id=nsp+1)
+    spot = Museum.objects.get(id=nsp+1)
     object_spot={'name':spot.en_name,'explain':spot.en_exp,
                 "img":spot.image,
                 "pk":obj.pk}
@@ -431,14 +427,12 @@ def CalculatePath(request,pk):
     object=UserPath.objects.get(pk=pk)
     object.last_page=request.build_absolute_uri()
     object.save()
-    #return render(request,"QAmuseum/CalculatePath.html",dict(user_path=obj))
     return render(request,"QAmuseum/CalculatePath.html",{'object':object,'pk':pk})
+
 #計算実行
 def caluculate(request,pk):
     if request.method =='GET':
-        #data=calctest()
         userpath=UserPath.objects.get(pk=pk)
-        
         path_data ,goal_time= calculatepath(userpath.time,userpath.speed,userpath.browse)
         print(goal_time)
         data=[]
@@ -468,11 +462,9 @@ def AllMuseum(request,pk):
     task = AsyncResult(obj.caluculate_back)
     if task.ready():
         path = task.get()
-        
         pd = str(path)
         pa= pd.replace(']','')
         path= pa.replace('[','')
-
         obj.path=path
         print(path)
         pt = path.split(',')
@@ -580,7 +572,7 @@ def MuseumPath(request,pk):
             start_time=time.time()
             userpath.start_time=start_time
             userpath.save()
-        nex = OmuraMuseum.objects.get(pk=userpath.next_spot+1)
+        nex = Museum.objects.get(pk=userpath.next_spot+1)
         object = {
             "path":userpath.path,
             "nowspot":userpath.now_spot+1,
@@ -591,18 +583,15 @@ def MuseumPath(request,pk):
             }
     nowsp=userpath.now_spot+1
     nextsp=userpath.next_spot+1
-    now_spot=OmuraMuseum.objects.get(id=nowsp)
-    next_spot=OmuraMuseum.objects.get(id=nextsp)
+    now_spot=Museum.objects.get(id=nowsp)
+    next_spot=Museum.objects.get(id=nextsp)
     spot={"nowspot_name":now_spot.name,
           "nextspot_name":next_spot.name}
     object.update(spot)
     pt=userpath.path.split(',')
     graph = Plot_graph(userpath.now_spot,userpath.next_spot,pt)
     object['graph']=graph
-    
-    
     return render(request, "QAmuseum/MuseumPath.html",object)
-    #return reverse("MuseumPath",kwargs={'pk':pk})
 
 def MuseumPathEn(request,pk):
     obj=UserPath.objects.get(pk=pk)
@@ -643,7 +632,7 @@ def MuseumPathEn(request,pk):
             start_time=time.time()
             userpath.start_time=start_time
             userpath.save()
-        nex = OmuraMuseum.objects.get(pk=userpath.next_spot+1)
+        nex = Museum.objects.get(pk=userpath.next_spot+1)
         object = {
             "path":userpath.path,
             "nowspot":userpath.now_spot+1,
@@ -654,8 +643,8 @@ def MuseumPathEn(request,pk):
             }
     nowsp=userpath.now_spot+1
     nextsp=userpath.next_spot+1
-    now_spot=OmuraMuseum.objects.get(id=nowsp)
-    next_spot=OmuraMuseum.objects.get(id=nextsp)
+    now_spot=Museum.objects.get(id=nowsp)
+    next_spot=Museum.objects.get(id=nextsp)
     spot={"nowspot_name":now_spot.en_name,
           "nextspot_name":next_spot.en_name}
     object.update(spot)
@@ -675,7 +664,7 @@ def Evaluation(request,pk):
                 #return redirect("Arrive",pk)
             else:
                 userpath=UserPath.objects.get(pk=pk)
-                spot=OmuraMuseum.objects.get(id=userpath.now_spot+1)
+                spot=Museum.objects.get(id=userpath.now_spot+1)
                 evaluation=MuseumEvaluation.objects.create(display_id=userpath.now_spot,display_name=spot.name,display_evaluation=ev,user_name=userpath.name,display_time=time.time()-userpath.now_time)
     else:
         form=EvaluationForm()
@@ -691,7 +680,7 @@ def EvaluationEn(request,pk):
                 #return redirect("ArriveEn",pk)
             else:
                 userpath=UserPath.objects.get(pk=pk)
-                spot=OmuraMuseum.objects.get(id=userpath.now_spot+1)
+                spot=Museum.objects.get(id=userpath.now_spot+1)
                 evaluation=MuseumEvaluation.objects.create(display_id=userpath.now_spot,display_name=spot.name,display_evaluation=ev,user_name=userpath.name,display_time=time.time()-userpath.now_time)
     else:
         form=EvaluationForm()
@@ -707,7 +696,7 @@ def EvaluationTSP(request,pk):
                 
             else:
                 userpath=UserPath.objects.get(pk=pk)
-                spot=OmuraMuseum.objects.get(id=userpath.now_spot+1)
+                spot=Museum.objects.get(id=userpath.now_spot+1)
                 evaluation=MuseumEvaluation.objects.create(display_id=userpath.now_spot,display_name=spot.name,display_evaluation=ev,user_name=userpath.name,display_time=time.time()-userpath.now_time)
     else:
         form=EvaluationForm()
@@ -729,7 +718,7 @@ def EvaluationTSPEn(request,pk):
                 
             else:
                 userpath=UserPath.objects.get(pk=pk)
-                spot=OmuraMuseum.objects.get(id=userpath.now_spot+1)
+                spot=Museum.objects.get(id=userpath.now_spot+1)
                 evaluation=MuseumEvaluation.objects.create(display_id=userpath.now_spot,display_name=spot.name,display_evaluation=ev,user_name=userpath.name,display_time=time.time()-userpath.now_time)
     else:
         form=EvaluationForm()
@@ -821,7 +810,7 @@ def Arrive(request,pk):
 
 
     nsp = userpath.now_spot
-    spot = OmuraMuseum.objects.filter(id=nsp+1)
+    spot = Museum.objects.filter(id=nsp+1)
     for spot in spot:
         object_spot={"name":spot.name,
                      "explain":spot.exp,
@@ -893,7 +882,7 @@ def ArriveEn(request,pk):
 
 
     nsp = userpath.now_spot
-    spot = OmuraMuseum.objects.filter(id=nsp+1)
+    spot = Museum.objects.filter(id=nsp+1)
     for spot in spot:
         object_spot={"name":spot.en_name,
                      "explain":spot.en_exp,
@@ -905,7 +894,7 @@ def ArriveEn(request,pk):
     return render(request,"QAmuseum/Arrive_En.html",object_spot)
 
 def Enter(request,pk):
-    enter = OmuraMuseum.objects.get(id=1)
+    enter = Museum.objects.get(id=1)
     object={'pk':pk,
             "name":enter.name,
             "explain":enter.exp,
@@ -913,7 +902,7 @@ def Enter(request,pk):
     return render(request,"QAmuseum/Enter.html",object)
 
 def EnterEn(request,pk):
-    enter = OmuraMuseum.objects.get(id=1)
+    enter = Museum.objects.get(id=1)
     object={'pk':pk,
             "name":enter.en_name,
             "explain":enter.en_exp,
@@ -1104,7 +1093,6 @@ def ReCalculate(request,pk):
 
 def recalc(request,pk):
     if request.method =='GET':
-        #data=calctest()
         userpath=UserPath.objects.get(pk=pk)
         re_time=userpath.time-(userpath.now_time-userpath.start_time)/60
         path_data = calculatepath(userpath.time,userpath.speed,userpath.browse)
@@ -1496,45 +1484,3 @@ def reload():
     time.sleep(1)
     og=2*3
     return og
-
-"""mid_time=time.time()
-    userpath.now_time=mid_time
-    predict_time=predict(path,userpath.now_spot,userpath.speed,userpath.browse)
-    userpath.predict_time=predict_time
-    userpath.save()
-    if int(predict_time) != int(userpath.now_time-userpath.start_time)/60:
-    #if predict_time>0:
-        print(predict_time*60)
-        print(userpath.now_time-userpath.start_time)
-        print("time over")
-        T=userpath.time-(userpath.now_time-userpath.start_time)/60
-        speed_move=userpath.speed
-        speed_watch=userpath.browse
-        temp_path=userpath.visit_path.split(',')
-        visit_spot=[]
-        for i in temp_path:
-            visit_spot.append(int(i))
-        now_spot=userpath.now_spot
-        path=recalculate(T,speed_move,speed_watch,visit_spot,now_spot)
-        if len(path) >2:
-            userpath.next_spot=path[1]
-            print(path)
-            pd=str(path)
-            pa = pd.replace(']','')
-            path = pa.replace('[','')
-            userpath.path=path
-            userpath.count=0
-            userpath.start_time=time.time()
-            userpath.save()
-        else:
-            userpath.next_spot=0
-            now_spot=userpath.now_spot
-            path=[]
-            path.append(now_spot)
-            path.append(0)
-            pd=str(path)
-            pa = pd.replace(']','')
-            path = pa.replace('[','')
-            userpath.path=path
-            userpath.count=0
-            #userpath.save()"""

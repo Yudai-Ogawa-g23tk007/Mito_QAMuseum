@@ -123,10 +123,6 @@ class EvaluationEnForm(forms.Form):
     display_evaluation=forms.ChoiceField(label="満足度",choices=choice_evaluation)
 
 class LoginForm(forms.Form):
-    """def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.label_suffix = " "
-        """
     name = forms.CharField(label='name',max_length=20)
     password = forms.CharField(label='password',widget=forms.PasswordInput(),max_length=4,validators=[MinLengthValidator(4)])
 
