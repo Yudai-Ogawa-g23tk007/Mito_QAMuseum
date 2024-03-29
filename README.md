@@ -26,15 +26,17 @@
 
 ## 4.アプリケーションの起動
 本ソースコードを利用する場合，必要なライブラリのインストール後，コードを変更しプログラムを次の手順に従ってプログラムを実行する．
-まず，Redisサーバーを起動して，非同期処理用にceleryを起動する．
+まず，Redisサーバーを起動する．
 ```
 redis-server
-cd STSP
+```
+次に，`manage.py`の存在するディレクトリに移動し，Celeryを起動する．
+```
 celery -A STSP worker -l INFO 
 ```
-次に`manage.py`の存在するディレクトリからサーバーを起動する．
+同ディレクトリからDjangoのサーバーを起動する．
 ```
-python manage.py runserver
+python manage.py runserver　***.***.****
 ```
 
 
